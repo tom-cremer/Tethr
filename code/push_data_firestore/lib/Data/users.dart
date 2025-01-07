@@ -1,0 +1,75 @@
+import 'package:dto/models.dart';
+
+const List<User> users = [
+  User(
+    firstName: "Ada",
+    lastName: "Lovelace",
+    username: "ada",
+    email: "ada@example.com",
+    links: ["https://en.wikipedia.org/wiki/Ada_Lovelace"],
+    starPoints: 100,
+    activeItems: ActiveItems(
+      banner: "golden_banner",
+      iconDecoration: "star_icon",
+      backgroundDecoration: "forest_theme",
+      nameTag: "style=bold",
+    ),
+  ),
+  User(
+    firstName: "Alan",
+    lastName: "Turing",
+    username: "alan",
+    email: "alan@example.com",
+    links: ["https://en.wikipedia.org/wiki/Alan_Turing"],
+    starPoints: 200,
+    activeItems: ActiveItems(
+      banner: "blue_banner",
+      iconDecoration: null,
+      backgroundDecoration: null,
+      nameTag: "style=italic",
+    ),
+  ),
+  User(
+    firstName: "Grace",
+    lastName: "Hopper",
+    username: "grace",
+    email: "grace@example.com",
+    links: ["https://en.wikipedia.org/wiki/Grace_Hopper"],
+    starPoints: 50,
+    activeItems: ActiveItems(),
+  ),
+  User(
+    firstName: "Linus",
+    lastName: "Torvalds",
+    username: "linus",
+    email: "linus@example.com",
+    links: ["https://en.wikipedia.org/wiki/Linus_Torvalds"],
+    starPoints: 75,
+    activeItems: ActiveItems(
+      banner: "silver_banner",
+      iconDecoration: "code_icon",
+      backgroundDecoration: "matrix_theme",
+      nameTag: "style=underline",
+    ),
+  ),
+  User(
+    firstName: "Margaret",
+    lastName: "Hamilton",
+    username: "margaret",
+    email: "margaret@example.com",
+    links: ["https://en.wikipedia.org/wiki/Margaret_Hamilton_(scientist)"],
+    starPoints: 150,
+    activeItems: ActiveItems(
+      banner: "golden_banner",
+    ),
+  ),
+  User(
+    firstName: "Tim",
+    lastName: "Berners-Lee",
+    username: "tim",
+    email: "tim@example.com",
+    links: ["https://en.wikipedia.org/wiki/Tim_Berners-Lee"],
+    starPoints: 125,
+    activeItems: ActiveItems(),
+  ),
+];

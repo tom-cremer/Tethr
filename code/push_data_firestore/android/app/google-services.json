@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "415204280623",
+    "project_id": "tethr-app",
+    "storage_bucket": "tethr-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415204280623:android:de987b0e4805856dd179da",
+        "android_client_info": {
+          "package_name": "be.tomcremer.tethr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATSuHnpBW9kGJcFWsU_5SpQr6ovX5mzFg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
