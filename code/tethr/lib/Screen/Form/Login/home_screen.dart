@@ -59,6 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _onRefresh() async {
+    await _fetchUserDataAndFollowers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,61 +90,78 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Column(
-                  children: [
-                    SvgPicture.asset('assets/images/logo.svg'),
-                    const Text('Main Screen'),
-                    const SizedBox(height: 20),
-                    Button(
-                      label: 'Sign out',
-                      onTap: () {
-                        FirebaseAuth.instance.signOut();
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => Welcome(),
+          : RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Column(
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset('assets/images/logo.svg'),
+                            const Text(
+                              'Wallet',
+                              style: TextStyle(
+                                color: kBlackText,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 24,
+                                fontFamily: 'Lexend',
+                              ),
+                            ),
+                          ]),
+                      const SizedBox(height: 20),
+                      Button(
+                        label: 'Sign out',
+                        onTap: () {
+                          FirebaseAuth.instance.signOut();
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => Welcome(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      const Row(
+                        children: [
+                          Text(
+                            'You',
+                            style: TextStyle(
+                                color: kBlackText,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                fontFamily: 'Lexend'),
                           ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    const Row(
-                      children: [
-                        Text(
-                          'You',
-                          style: TextStyle(
-                              color: kBlackText,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                              fontFamily: 'Lexend'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Wallet(
-                      userData: _userData,
-                      purchaseData: _purchaseData,
-                      rewardsData: _rewardsData,
-                      isCurrentUser: true,
-                    ),
-                    const SizedBox(height: 30),
-                    const Row(
-                      children: [
-                        Text(
-                          'Followings',
-                          style: TextStyle(
-                              color: kBlackText,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                              fontFamily: 'Lexend'),
-                        ),
-                      ],
-                    ),
-                    _buildFollowersList(
-                        _followersData, _purchaseData, _rewardsData),
-                  ],
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Wallet(
+                        userData: _userData,
+                        purchaseData: _purchaseData,
+                        rewardsData: _rewardsData,
+                        isCurrentUser: true,
+                      ),
+                      const SizedBox(height: 30),
+                      const Row(
+                        children: [
+                          Text(
+                            'Followings',
+                            style: TextStyle(
+                                color: kBlackText,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                fontFamily: 'Lexend'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      _buildFollowersList(
+                          _followersData, _purchaseData, _rewardsData),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -149,10 +170,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Helper method for building the followers list
   Widget _buildFollowersList(
-      List<Map<String, dynamic>> followersData,
-      List<Map<String, dynamic>> purchaseData,
-      List<Map<String, dynamic>> rewardsData,
-      ) {
+    List<Map<String, dynamic>> followersData,
+    List<Map<String, dynamic>> purchaseData,
+    List<Map<String, dynamic>> rewardsData,
+  ) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
