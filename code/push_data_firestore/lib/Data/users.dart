@@ -9,8 +9,8 @@ const List<User> users = [
     links: ["https://en.wikipedia.org/wiki/Ada_Lovelace"],
     starPoints: 100,
     activeItems: ActiveItems(
-      banner: "golden_banner",
-      iconDecoration: "star_icon",
+      banner: "purple_card",
+      iconDecoration: "purple_card",
       backgroundDecoration: "forest_theme",
       nameTag: "style=bold",
     ),
@@ -23,8 +23,8 @@ const List<User> users = [
     links: ["https://en.wikipedia.org/wiki/Alan_Turing"],
     starPoints: 200,
     activeItems: ActiveItems(
-      banner: "blue_banner",
-      iconDecoration: null,
+      banner: "orange_card",
+      iconDecoration: "orange_card",
       backgroundDecoration: null,
       nameTag: "style=italic",
     ),
@@ -36,7 +36,12 @@ const List<User> users = [
     email: "grace@example.com",
     links: ["https://en.wikipedia.org/wiki/Grace_Hopper"],
     starPoints: 50,
-    activeItems: ActiveItems(),
+    activeItems: ActiveItems(
+      banner: "pink_card",
+      iconDecoration: "pink_card",
+      backgroundDecoration: "forest_theme",
+      nameTag: "style=underline",
+    ),
   ),
   User(
     firstName: "Linus",
@@ -46,8 +51,8 @@ const List<User> users = [
     links: ["https://en.wikipedia.org/wiki/Linus_Torvalds"],
     starPoints: 75,
     activeItems: ActiveItems(
-      banner: "silver_banner",
-      iconDecoration: "code_icon",
+      banner: "pink_card",
+      iconDecoration: "pink_card",
       backgroundDecoration: "matrix_theme",
       nameTag: "style=underline",
     ),
@@ -60,7 +65,10 @@ const List<User> users = [
     links: ["https://en.wikipedia.org/wiki/Margaret_Hamilton_(scientist)"],
     starPoints: 150,
     activeItems: ActiveItems(
-      banner: "golden_banner",
+      banner: "blue_card",
+      iconDecoration: "blue_card",
+      backgroundDecoration: "matrix_theme",
+      nameTag: "style=bold",
     ),
   ),
   User(
@@ -70,6 +78,11 @@ const List<User> users = [
     email: "tim@example.com",
     links: ["https://en.wikipedia.org/wiki/Tim_Berners-Lee"],
     starPoints: 125,
-    activeItems: ActiveItems(),
+    activeItems: ActiveItems(
+      banner: "blue_card",
+      iconDecoration: "blue_card",
+      backgroundDecoration: "forest_theme",
+      nameTag: "style=italic",
+    ),
   ),
 ];
