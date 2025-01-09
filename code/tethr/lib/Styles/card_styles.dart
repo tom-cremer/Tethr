@@ -24,6 +24,27 @@ class GradientStyles {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+  static const defaultGradient = LinearGradient(
+    colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static LinearGradient getGradient(String? iconDecoration) {
+    switch (iconDecoration) {
+      case 'purple_card':
+        return purple;
+      case 'blue_card':
+        return blue;
+      case 'pink_card':
+        return pink;
+      case 'orange_card':
+        return orange;
+      default:
+        return defaultGradient;
+    }
+  }
 }
 
 const kCardBlurRadius = 5.0;
