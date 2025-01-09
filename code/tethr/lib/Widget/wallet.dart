@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tethr/Screen/Form/Login/user_profile_screen.dart';
 import 'package:tethr/Styles/card_styles.dart';
-import 'package:tethr/Widget/card_background.dart';
 import 'package:tethr/Styles/colors.dart';
+import 'package:tethr/Widget/card_background.dart';
 
 class Wallet extends StatelessWidget {
   final Map<String, dynamic> userData;
@@ -20,6 +20,8 @@ class Wallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gradient = GradientStyles.getGradient(userData['activeItems']['iconDecoration']); // Determine the gradient based on `iconDecoration`.
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -49,8 +51,8 @@ class Wallet extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
-            const CardWidget(
-              gradient: GradientStyles.purple,
+            CardWidget(
+              gradient: gradient,
               width: kSmallCardWidth,
               height: kSmallCardHeight,
               radius: kSmallCardRadius,
@@ -59,7 +61,7 @@ class Wallet extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                userData['username'] ?? userData['name'] ?? 'Anonymous',
+                userData['username'] ?? 'Oups! No username found',
                 style: const TextStyle(
                   color: Color(0xFF3D3D3D),
                   fontSize: 16,
