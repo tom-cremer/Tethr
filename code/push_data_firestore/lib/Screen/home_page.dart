@@ -75,77 +75,67 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void deleteAllData() async {
+  /// Delete all collections in Firestore.
+  Future<void> deleteAllData() async {
     final firestore = FirebaseFirestore.instance;
 
-    // Delete users collection.
-    final usersSnapshot = await firestore.collection('users').get();
-    for (var doc in usersSnapshot.docs) {
-      doc.reference.delete();
-    }
+    await firestore.collection('users').get().then((snapshot) {
+      for (var doc in snapshot.docs) {
+        doc.reference.delete();
+      }
+    });
 
-    // Delete rewards collection.
-    final rewardsSnapshot = await firestore.collection('rewards').get();
-    for (var doc in rewardsSnapshot.docs) {
-      doc.reference.delete();
-    }
+    await firestore.collection('rewards').get().then((snapshot) {
+      for (var doc in snapshot.docs) {
+        doc.reference.delete();
+      }
+    });
 
-    // Delete shop collection.
-    final shopSnapshot = await firestore.collection('shop').get();
-    for (var doc in shopSnapshot.docs) {
-      doc.reference.delete();
-    }
+    await firestore.collection('shop').get().then((snapshot) {
+      for (var doc in snapshot.docs) {
+        doc.reference.delete();
+      }
+    });
 
     setState(() {
       _description.insert(0, "All data deleted!");
     });
   }
 
+  /// Populate Firestore with test data.
   Future<void> populateFirestore() async {
     await populateShop();
     await populateRewards();
     await authenticateAndCreateUsers();
+
     setState(() {
       _description.insert(0, "All data successfully pushed!");
     });
   }
 
+  /// Populate shop collection using DTOs.
   Future<void> populateShop() async {
-    final firestore = FirebaseFirestore.instance.collection('shop');
     for (final item in shopItems) {
-      await firestore.doc(item.id).set({
-        'id': item.id,
-        'name': item.name,
-        'type': item.type,
-        'description': item.description,
-        'cost': item.cost,
-        'icon': item.icon,
-      });
+      await shopRef.doc(item.id).set(item);
       setState(() {
         _description.insert(0, "Shop item ${item.name} added!");
       });
     }
   }
 
+  /// Populate rewards collection using DTOs.
   Future<void> populateRewards() async {
-    final firestore = FirebaseFirestore.instance.collection('rewards');
     for (final reward in rewards) {
-      await firestore.doc(reward.id).set({
-        'id': reward.id,
-        'name': reward.name,
-        'type': reward.type,
-        'description': reward.description,
-        'starPoints': reward.starPoints,
-      });
+      await rewardsRef.doc(reward.id).set(reward);
       setState(() {
         _description.insert(0, "Reward ${reward.name} added!");
       });
     }
   }
 
+  /// Authenticate and create users in Firestore using DTOs.
   Future<void> authenticateAndCreateUsers() async {
-    Map<String, Map<String, dynamic>> userDataMap =
-        {}; // Map to store user data.
+    Map<String, User> userMap = {}; // Map to store user data by UID.
 
     for (var user in users) {
       try {
@@ -157,26 +147,12 @@ class _HomeState extends State<Home> {
 
         final uid = authResult.user?.uid;
         if (uid != null) {
-          final userDoc =
-              FirebaseFirestore.instance.collection('users').doc(uid);
-
-          final userData = {
-            'firstName': user.firstName,
-            'lastName': user.lastName,
-            'email': user.email,
-            'username': user.username,
-            'links': user.links,
-            'starPoints': user.starPoints,
-            'activeItems': user.activeItems.toJson(),
-          };
-
-          await userDoc.set(userData);
+          await usersRef.doc(uid).set(user);
 
           // Assign initial rewards and purchases.
           await assignInitialRewardsAndPurchases(uid);
 
-          // Store user data for later use in followers collection.
-          userDataMap[uid] = userData;
+          userMap[uid] = user;
 
           setState(() {
             _description.insert(0, "User ${user.email} created with UID $uid");
@@ -192,54 +168,66 @@ class _HomeState extends State<Home> {
     }
 
     // Add followers sub-collection.
-    await addFollowersWithDetails(userDataMap);
+    await addFollowersWithDetails(userMap);
   }
 
+  /// Assign random rewards and purchases to a user.
   Future<void> assignInitialRewardsAndPurchases(String userId) async {
-    // Add rewards.
-    final rewardsToAssign = ["first_login", "first_purchase"];
-    for (final rewardId in rewardsToAssign) {
-      final reward = rewards.firstWhere((r) => r.id == rewardId);
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('rewards')
-          .doc(reward.id)
-          .set({
-        'id': reward.id,
-        'name': reward.name,
-        'type': reward.type,
-        'starPoints': reward.starPoints,
-        'earnedAt': FieldValue.serverTimestamp(),
+    final Random random = Random();
+
+    // Add a random number of rewards.
+    final userRewardsCollection = usersRef.doc(userId).rewards;
+    final rewardCount =
+        random.nextInt(rewards.length) + 1; // 1 to rewards.length
+    final shuffledRewards = List.of(rewards)..shuffle(random);
+    final selectedRewards = shuffledRewards.take(rewardCount);
+
+    for (var reward in selectedRewards) {
+      final userReward = UserReward(
+        rewardId: reward.id,
+        name: reward.name,
+        type: reward.type,
+        starPoints: reward.starPoints,
+        earnedAt: Timestamp.now(),
+      );
+
+      await userRewardsCollection.doc(reward.id).set(userReward);
+      setState(() {
+        _description.insert(
+            0, "Added random reward ${reward.name} to user $userId");
       });
     }
 
-    // Add purchases.
-    final purchasesToAssign = ["blue_card", "orange_card"];
-    for (final itemId in purchasesToAssign) {
-      final item = shopItems.firstWhere((i) => i.id == itemId);
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('purchases')
-          .doc(item.id)
-          .set({
-        'id': item.id,
-        'name': item.name,
-        'type': item.type,
-        'icon': item.icon,
-        'purchasedAt': FieldValue.serverTimestamp(),
+    // Add a random number of purchases.
+    final userPurchasesCollection = usersRef.doc(userId).purchases;
+    final purchaseCount =
+        random.nextInt(shopItems.length) + 1; // 1 to shopItems.length
+    final shuffledShopItems = List.of(shopItems)..shuffle(random);
+    final selectedShopItems = shuffledShopItems.take(purchaseCount);
+
+    for (var item in selectedShopItems) {
+      final userPurchase = UserPurchase(
+        itemId: item.id,
+        name: item.name,
+        type: item.type,
+        icon: item.icon,
+        purchasedAt: Timestamp.now(),
+      );
+
+      await userPurchasesCollection.doc(item.id).set(userPurchase);
+      setState(() {
+        _description.insert(
+            0, "Added random purchase ${item.name} to user $userId");
       });
     }
   }
 
-  Future<void> addFollowersWithDetails(
-      Map<String, Map<String, dynamic>> userDataMap) async {
-    final userUids = userDataMap.keys.toList();
+  /// Add followers to each user.
+  Future<void> addFollowersWithDetails(Map<String, User> userMap) async {
+    final userUids = userMap.keys.toList();
 
     for (var uid in userUids) {
-      final userDoc = FirebaseFirestore.instance.collection('users').doc(uid);
-      final followersCollection = userDoc.collection('followers');
+      final followersCollection = usersRef.doc(uid).followers;
 
       // Select a random number of followers.
       final followerCount = _random.nextInt(userUids.length - 1) + 1;
@@ -251,17 +239,13 @@ class _HomeState extends State<Home> {
 
       for (var i = 0; i < followerCount; i++) {
         final followerUid = randomFollowers[i];
-        final followerData = userDataMap[followerUid];
+        final followerData = userMap[followerUid];
 
         if (followerData != null) {
-          await followersCollection.doc(followerUid).set({
-            ...followerData,
-            'timestamp': FieldValue.serverTimestamp(),
-          });
-
+          await followersCollection.doc(followerUid).set(followerData);
           setState(() {
             _description.insert(
-                0, "Added follower ${followerData['email']} to user ${uid}");
+                0, "Added follower ${followerData.email} to user $uid");
           });
         }
       }
