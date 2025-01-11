@@ -32,14 +32,14 @@ abstract class UsersCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$UserFromJson(snapshot.data()!);
+    return User.fromJson(snapshot.data()!);
   }
 
   static Map<String, Object?> toFirestore(
     User value,
     SetOptions? options,
   ) {
-    return _$UserToJson(value);
+    return value.toJson();
   }
 
   @override
@@ -318,7 +318,7 @@ class _$UsersDocumentReference
     FieldValue? activeItemsFieldValue,
   }) async {
     final json = {
-      ..._$UserToJson(model),
+      ...model.toJson(),
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -353,7 +353,7 @@ class _$UsersDocumentReference
     FieldValue? activeItemsFieldValue,
   }) {
     final json = {
-      ..._$UserToJson(model),
+      ...model.toJson(),
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -384,7 +384,7 @@ class _$UsersDocumentReference
     FieldValue? activeItemsFieldValue,
   }) {
     final json = {
-      ..._$UserToJson(model),
+      ...model.toJson(),
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -2119,14 +2119,14 @@ abstract class FollowersCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$UserFromJson(snapshot.data()!);
+    return User.fromJson(snapshot.data()!);
   }
 
   static Map<String, Object?> toFirestore(
     User value,
     SetOptions? options,
   ) {
-    return _$UserToJson(value);
+    return value.toJson();
   }
 
   @override
@@ -2393,7 +2393,7 @@ class _$FollowersDocumentReference
     FieldValue? activeItemsFieldValue,
   }) async {
     final json = {
-      ..._$UserToJson(model),
+      ...model.toJson(),
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -2428,7 +2428,7 @@ class _$FollowersDocumentReference
     FieldValue? activeItemsFieldValue,
   }) {
     final json = {
-      ..._$UserToJson(model),
+      ...model.toJson(),
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -2459,7 +2459,7 @@ class _$FollowersDocumentReference
     FieldValue? activeItemsFieldValue,
   }) {
     final json = {
-      ..._$UserToJson(model),
+      ...model.toJson(),
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -4198,14 +4198,14 @@ abstract class UserRewardsCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$UserRewardFromJson(snapshot.data()!);
+    return UserReward.fromJson(snapshot.data()!);
   }
 
   static Map<String, Object?> toFirestore(
     UserReward value,
     SetOptions? options,
   ) {
-    return _$UserRewardToJson(value);
+    return value.toJson();
   }
 
   @override
@@ -4454,7 +4454,7 @@ class _$UserRewardsDocumentReference
     FieldValue? earnedAtFieldValue,
   }) async {
     final json = {
-      ..._$UserRewardToJson(model),
+      ...model.toJson(),
       if (rewardIdFieldValue != null)
         _$UserRewardFieldMap['rewardId']!: rewardIdFieldValue,
       if (nameFieldValue != null) _$UserRewardFieldMap['name']!: nameFieldValue,
@@ -4483,7 +4483,7 @@ class _$UserRewardsDocumentReference
     FieldValue? earnedAtFieldValue,
   }) {
     final json = {
-      ..._$UserRewardToJson(model),
+      ...model.toJson(),
       if (rewardIdFieldValue != null)
         _$UserRewardFieldMap['rewardId']!: rewardIdFieldValue,
       if (nameFieldValue != null) _$UserRewardFieldMap['name']!: nameFieldValue,
@@ -4508,7 +4508,7 @@ class _$UserRewardsDocumentReference
     FieldValue? earnedAtFieldValue,
   }) {
     final json = {
-      ..._$UserRewardToJson(model),
+      ...model.toJson(),
       if (rewardIdFieldValue != null)
         _$UserRewardFieldMap['rewardId']!: rewardIdFieldValue,
       if (nameFieldValue != null) _$UserRewardFieldMap['name']!: nameFieldValue,
@@ -5901,14 +5901,14 @@ abstract class UserPurchasesCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$UserPurchaseFromJson(snapshot.data()!);
+    return UserPurchase.fromJson(snapshot.data()!);
   }
 
   static Map<String, Object?> toFirestore(
     UserPurchase value,
     SetOptions? options,
   ) {
-    return _$UserPurchaseToJson(value);
+    return value.toJson();
   }
 
   @override
@@ -6160,7 +6160,7 @@ class _$UserPurchasesDocumentReference extends FirestoreDocumentReference<
     FieldValue? purchasedAtFieldValue,
   }) async {
     final json = {
-      ..._$UserPurchaseToJson(model),
+      ...model.toJson(),
       if (itemIdFieldValue != null)
         _$UserPurchaseFieldMap['itemId']!: itemIdFieldValue,
       if (nameFieldValue != null)
@@ -6191,7 +6191,7 @@ class _$UserPurchasesDocumentReference extends FirestoreDocumentReference<
     FieldValue? purchasedAtFieldValue,
   }) {
     final json = {
-      ..._$UserPurchaseToJson(model),
+      ...model.toJson(),
       if (itemIdFieldValue != null)
         _$UserPurchaseFieldMap['itemId']!: itemIdFieldValue,
       if (nameFieldValue != null)
@@ -6218,7 +6218,7 @@ class _$UserPurchasesDocumentReference extends FirestoreDocumentReference<
     FieldValue? purchasedAtFieldValue,
   }) {
     final json = {
-      ..._$UserPurchaseToJson(model),
+      ...model.toJson(),
       if (itemIdFieldValue != null)
         _$UserPurchaseFieldMap['itemId']!: itemIdFieldValue,
       if (nameFieldValue != null)
@@ -7628,14 +7628,14 @@ abstract class RewardsCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$RewardFromJson(snapshot.data()!);
+    return Reward.fromJson(snapshot.data()!);
   }
 
   static Map<String, Object?> toFirestore(
     Reward value,
     SetOptions? options,
   ) {
-    return _$RewardToJson(value);
+    return value.toJson();
   }
 
   @override
@@ -7864,7 +7864,7 @@ class _$RewardsDocumentReference
     FieldValue? starPointsFieldValue,
   }) async {
     final json = {
-      ..._$RewardToJson(model),
+      ...model.toJson(),
       if (idFieldValue != null) _$RewardFieldMap['id']!: idFieldValue,
       if (nameFieldValue != null) _$RewardFieldMap['name']!: nameFieldValue,
       if (typeFieldValue != null) _$RewardFieldMap['type']!: typeFieldValue,
@@ -7892,7 +7892,7 @@ class _$RewardsDocumentReference
     FieldValue? starPointsFieldValue,
   }) {
     final json = {
-      ..._$RewardToJson(model),
+      ...model.toJson(),
       if (idFieldValue != null) _$RewardFieldMap['id']!: idFieldValue,
       if (nameFieldValue != null) _$RewardFieldMap['name']!: nameFieldValue,
       if (typeFieldValue != null) _$RewardFieldMap['type']!: typeFieldValue,
@@ -7916,7 +7916,7 @@ class _$RewardsDocumentReference
     FieldValue? starPointsFieldValue,
   }) {
     final json = {
-      ..._$RewardToJson(model),
+      ...model.toJson(),
       if (idFieldValue != null) _$RewardFieldMap['id']!: idFieldValue,
       if (nameFieldValue != null) _$RewardFieldMap['name']!: nameFieldValue,
       if (typeFieldValue != null) _$RewardFieldMap['type']!: typeFieldValue,
@@ -9286,14 +9286,14 @@ abstract class ShopCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$ShopItemFromJson(snapshot.data()!);
+    return ShopItem.fromJson(snapshot.data()!);
   }
 
   static Map<String, Object?> toFirestore(
     ShopItem value,
     SetOptions? options,
   ) {
-    return _$ShopItemToJson(value);
+    return value.toJson();
   }
 
   @override
@@ -9532,7 +9532,7 @@ class _$ShopDocumentReference
     FieldValue? iconFieldValue,
   }) async {
     final json = {
-      ..._$ShopItemToJson(model),
+      ...model.toJson(),
       if (idFieldValue != null) _$ShopItemFieldMap['id']!: idFieldValue,
       if (nameFieldValue != null) _$ShopItemFieldMap['name']!: nameFieldValue,
       if (typeFieldValue != null) _$ShopItemFieldMap['type']!: typeFieldValue,
@@ -9561,7 +9561,7 @@ class _$ShopDocumentReference
     FieldValue? iconFieldValue,
   }) {
     final json = {
-      ..._$ShopItemToJson(model),
+      ...model.toJson(),
       if (idFieldValue != null) _$ShopItemFieldMap['id']!: idFieldValue,
       if (nameFieldValue != null) _$ShopItemFieldMap['name']!: nameFieldValue,
       if (typeFieldValue != null) _$ShopItemFieldMap['type']!: typeFieldValue,
@@ -9586,7 +9586,7 @@ class _$ShopDocumentReference
     FieldValue? iconFieldValue,
   }) {
     final json = {
-      ..._$ShopItemToJson(model),
+      ...model.toJson(),
       if (idFieldValue != null) _$ShopItemFieldMap['id']!: idFieldValue,
       if (nameFieldValue != null) _$ShopItemFieldMap['name']!: nameFieldValue,
       if (typeFieldValue != null) _$ShopItemFieldMap['type']!: typeFieldValue,
@@ -11206,6 +11206,9 @@ Follow _$FollowFromJson(Map<String, dynamic> json) => Follow(
       username: json['username'] as String,
       links:
           (json['links'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      activeItems: json['activeItems'] == null
+          ? const ActiveItems()
+          : ActiveItems.fromJson(json['activeItems'] as Map<String, dynamic>),
     );
 
 const _$FollowFieldMap = <String, String>{
@@ -11214,6 +11217,7 @@ const _$FollowFieldMap = <String, String>{
   'email': 'email',
   'username': 'username',
   'links': 'links',
+  'activeItems': 'activeItems',
 };
 
 // ignore: unused_element
@@ -11228,6 +11232,8 @@ abstract class _$FollowPerFieldToJson {
   static Object? username(String instance) => instance;
   // ignore: unused_element
   static Object? links(List<String>? instance) => instance;
+  // ignore: unused_element
+  static Object? activeItems(ActiveItems instance) => instance.toJson();
 }
 
 Map<String, dynamic> _$FollowToJson(Follow instance) => <String, dynamic>{
@@ -11236,6 +11242,7 @@ Map<String, dynamic> _$FollowToJson(Follow instance) => <String, dynamic>{
       'email': instance.email,
       'username': instance.username,
       'links': instance.links,
+      'activeItems': instance.activeItems.toJson(),
     };
 
 Reward _$RewardFromJson(Map<String, dynamic> json) => Reward(

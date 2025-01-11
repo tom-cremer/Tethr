@@ -31,6 +31,10 @@ class User {
     this.starPoints = 0,
     this.activeItems = const ActiveItems(),
   });
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+
 }
 
 /// Customization details for active user items.
@@ -49,7 +53,6 @@ class ActiveItems {
   });
 
   factory ActiveItems.fromJson(Map<String, dynamic> json) => _$ActiveItemsFromJson(json);
-
   Map<String, dynamic> toJson() => _$ActiveItemsToJson(this);
 
 }
@@ -62,6 +65,7 @@ class Follow {
   final String email;
   final String username;
   final List<String>? links;
+  final ActiveItems activeItems;
 
   const Follow({
     required this.firstName,
@@ -69,7 +73,11 @@ class Follow {
     required this.email,
     required this.username,
     this.links,
+    this.activeItems = const ActiveItems(),
   });
+
+  factory Follow.fromJson(Map<String, dynamic> json) => _$FollowFromJson(json);
+  Map<String, dynamic> toJson() => _$FollowToJson(this);
 }
 
 /// Reward details stored in the global `rewards` collection.
@@ -88,6 +96,9 @@ class Reward {
     required this.description,
     required this.starPoints,
   });
+
+  factory Reward.fromJson(Map<String, dynamic> json) => _$RewardFromJson(json);
+  Map<String, dynamic> toJson() => _$RewardToJson(this);
 }
 
 /// User-specific reward details stored in `users/{userId}/rewards`.
@@ -106,6 +117,9 @@ class UserReward {
     required this.starPoints,
     required this.earnedAt,
   });
+
+  factory UserReward.fromJson(Map<String, dynamic> json) => _$UserRewardFromJson(json);
+  Map<String, dynamic> toJson() => _$UserRewardToJson(this);
 }
 
 /// Item details stored in the global `shop` collection.
@@ -126,6 +140,9 @@ class ShopItem {
     required this.cost,
     required this.icon,
   });
+
+  factory ShopItem.fromJson(Map<String, dynamic> json) => _$ShopItemFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopItemToJson(this);
 }
 
 /// User-specific purchased item stored in `users/{userId}/purchases`.
@@ -144,6 +161,9 @@ class UserPurchase {
     required this.icon,
     required this.purchasedAt,
   });
+
+  factory UserPurchase.fromJson(Map<String, dynamic> json) => _$UserPurchaseFromJson(json);
+  Map<String, dynamic> toJson() => _$UserPurchaseToJson(this);
 }
 
 @Collection<User>('users', prefix: 'Users')
