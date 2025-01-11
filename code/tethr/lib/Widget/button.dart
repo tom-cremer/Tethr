@@ -6,30 +6,45 @@ class Button extends StatelessWidget {
   final GestureTapCallback? onTap;
   final String label;
 
+
+  final double verticalPadding;
+  final double verticalMargin;
+  final double horizontalMargin;
+  final double borderRadius;
+
+  final Color color;
+
+
+
   const Button({
     required this.label,
     this.onTap,
+    this.verticalPadding = kButtonNavVertical,
+    this.verticalMargin = kButtonNavVertical,
+    this.horizontalMargin = kMarginDefault,
+    this.borderRadius = kBorderRadius,
+    this.color = kGreen,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: kMarginDefault,
-        vertical: kButtonNavVertical,
+      margin: EdgeInsets.symmetric(
+        horizontal: horizontalMargin,
+        vertical: verticalMargin,
       ),
       child: SizedBox(
-        width: double.infinity, // Makes the button take all horizontal space
+        width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(
-              vertical: kButtonNavVertical, // Removed horizontal padding to use full width
+            padding: EdgeInsets.symmetric(
+              vertical: verticalPadding,
             ),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(kBorderRadius),
+              borderRadius: BorderRadius.circular(borderRadius),
             ),
-            backgroundColor: kGreen,
+            backgroundColor: color,
           ),
           onPressed: onTap,
           child: Text(
@@ -46,12 +61,3 @@ class Button extends StatelessWidget {
     );
   }
 }
-
-
-
-/*style: TextStyle(
-            color: kBlackText,
-            fontWeight: FontWeight.normal,
-            fontSize: 18,
-          ),
-*/
