@@ -1,11 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dto/models.dart' as dto;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tethr/Helpers/firestore_helper.dart';
-import 'package:tethr/Screen/welcome.dart';
+import 'package:tethr/Screen/Form/Login/shop_screen.dart';
+import 'package:tethr/Screen/settings.dart';
 import 'package:tethr/Styles/colors.dart';
-import 'package:tethr/Widget/button.dart';
 import 'package:tethr/Widget/wallet.dart';
+import 'package:tethr/custom_icons_icons.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,10 +16,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Map<String, dynamic> _userData = {};
-  List<Map<String, dynamic>> _followersData = [];
-  List<Map<String, dynamic>> _purchaseData = [];
-  List<Map<String, dynamic>> _rewardsData = [];
+  dto.User? _userData;
+  List<dto.Follow> _followersData = [];
+  List<dto.UserPurchase> _purchaseData = [];
+  List<dto.UserReward> _rewardsData = [];
   bool _isLoading = true;
 
   @override
@@ -48,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _rewardsData = rewardsData;
       });
     } catch (e) {
-      // Handle errors and display a snackbar.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error fetching user or followers data: $e')),
       );
@@ -69,111 +69,115 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(CustomIcons.search),
             onPressed: () {
               // Action for the notifications button (left side)
             },
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(CustomIcons.settings),
             onPressed: () {
-              // Action for the search button (left side)
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Settings(),
+                ),
+              );
             },
           ),
         ],
         leading: IconButton(
-          icon: const Icon(Icons.shopping_bag_outlined),
+          icon: const Icon(CustomIcons.shop),
           onPressed: () {
-            // Action for the right icon button (menu)
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ShopScreen(),
+              ),
+            );
           },
         ),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: kYellow,))
           : RefreshIndicator(
+              color: kYellow,
               onRefresh: _onRefresh,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Column(
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 30.0, right: 30.0, bottom: 50.0),
+                        child: Column(
                           children: [
-                            SvgPicture.asset('assets/images/logo.svg'),
-                            const Text(
-                              'Wallet',
-                              style: TextStyle(
-                                color: kBlackText,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 24,
-                                fontFamily: 'Lexend',
-                              ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset('assets/images/logo.svg'),
+                                  const Text(
+                                    'Wallet',
+                                    style: TextStyle(
+                                      color: kBlackText,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 24,
+                                      fontFamily: 'Lexend',
+                                    ),
+                                  ),
+                                ]),
+                            const SizedBox(height: 20),
+                            const Row(
+                              children: [
+                                Text(
+                                  'You',
+                                  style: TextStyle(
+                                      color: kBlackText,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
+                                      fontFamily: 'Lexend'),
+                                ),
+                              ],
                             ),
-                          ]),
-                      const SizedBox(height: 20),
-                      Button(
-                        label: 'Sign out',
-                        onTap: () {
-                          FirebaseAuth.instance.signOut();
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => Welcome(),
+                            const SizedBox(height: 10),
+                            Wallet(
+                              userData: _userData,
+                              purchaseData: _purchaseData,
+                              rewardsData: _rewardsData,
+                              isCurrentUser: true,
                             ),
-                          );
-                        },
+                            const SizedBox(height: 30),
+                            const Row(
+                              children: [
+                                Text(
+                                  'Followings',
+                                  style: TextStyle(
+                                      color: kBlackText,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
+                                      fontFamily: 'Lexend'),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            _buildFollowersList(
+                              _followersData, _purchaseData, _rewardsData),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 20),
-                      const Row(
-                        children: [
-                          Text(
-                            'You',
-                            style: TextStyle(
-                                color: kBlackText,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
-                                fontFamily: 'Lexend'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Wallet(
-                        userData: _userData,
-                        purchaseData: _purchaseData,
-                        rewardsData: _rewardsData,
-                        isCurrentUser: true,
-                      ),
-                      const SizedBox(height: 30),
-                      const Row(
-                        children: [
-                          Text(
-                            'Followings',
-                            style: TextStyle(
-                                color: kBlackText,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
-                                fontFamily: 'Lexend'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      _buildFollowersList(
-                          _followersData, _purchaseData, _rewardsData),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
             ),
     );
   }
 
   // Helper method for building the followers list
-  Widget _buildFollowersList(
-    List<Map<String, dynamic>> followersData,
-    List<Map<String, dynamic>> purchaseData,
-    List<Map<String, dynamic>> rewardsData,
-  ) {
+  Widget _buildFollowersList(List<dto.Follow> followersData,
+      List<dto.UserPurchase> purchaseData, List<dto.UserReward> rewardsData) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -181,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (context, index) {
         final follower = followersData[index];
         return Wallet(
-          userData: follower,
+          follower: follower,
           purchaseData: purchaseData,
           rewardsData: rewardsData,
         );
