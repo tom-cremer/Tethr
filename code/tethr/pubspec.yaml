@@ -47,6 +47,11 @@ dependencies:
   cloud_firestore_odm_generator: ^1.0.0-dev.89
   qr_flutter: ^4.1.0
   screenshot: ^3.0.0
+  url_launcher: ^6.3.1
+  image_picker: ^1.1.2
+
+  dto:
+    path: ../dto
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +83,8 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/
+    - assets/default_profile.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -110,3 +117,7 @@ flutter:
    - family: Lexend
      fonts:
      - asset: ./lib/Fonts/Lexend.ttf
+
+   - family: CustomIcons
+     fonts:
+     - asset: ./lib/Fonts/CustomIcons.ttf
