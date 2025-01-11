@@ -1,10 +1,9 @@
 import 'package:dto/models.dart';
-import 'package:flutter/material.dart';
 
 const List<ShopItem> shopItems = [
   ShopItem(
       id: "blue_card",
-      name: "Blue Theme",
+      name: "Blue Card",
       type: "Card",
       description: "Blue themed card",
       cost: 250,
@@ -12,7 +11,7 @@ const List<ShopItem> shopItems = [
   ),
   ShopItem(
       id: "pink_card",
-      name: "Pink Theme",
+      name: "Pink Card",
       type: "Card",
       description: "Pink themed card",
       cost: 250,
@@ -20,7 +19,7 @@ const List<ShopItem> shopItems = [
   ),
   ShopItem(
       id: "purple_card",
-      name: "Purple Theme",
+      name: "Purple Card",
       type: "Card",
       description: "Purple themed card",
       cost: 250,
@@ -28,7 +27,7 @@ const List<ShopItem> shopItems = [
   ),
   ShopItem(
       id: "orange_card",
-      name: "Orange Theme",
+      name: "Orange Card",
       type: "Card",
       description: "Orange themed card",
       cost: 250,
