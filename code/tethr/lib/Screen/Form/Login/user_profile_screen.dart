@@ -1,20 +1,26 @@
+import 'package:dto/models.dart' as dto;
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:tethr/Screen/settings.dart';
 import 'package:tethr/Styles/card_styles.dart';
 import 'package:tethr/Styles/colors.dart';
 import 'package:tethr/Widget/card_stack.dart';
+import 'package:tethr/Screen/Form/Edit/edit_screen.dart';
+import 'package:tethr/custom_icons_icons.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  final Map<String, dynamic> userData;
-  final List<Map<String, dynamic>>? purchaseData;
-  final List<Map<String, dynamic>>? rewardsData;
+  dto.User? userData;
+  dto.Follow? follower;
+  List<dto.UserPurchase> purchaseData = [];
+  List<dto.UserReward> rewardsData = [];
   final bool isCurrentUser;
 
-  const UserProfileScreen({
+  UserProfileScreen({
     super.key,
-    required this.userData,
-    this.purchaseData,
-    this.rewardsData,
+    this.userData,
+    this.follower,
+    required this.purchaseData,
+    required this.rewardsData,
     this.isCurrentUser = false, // Default to false for other users.
   });
 
@@ -52,7 +58,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   @override
   Widget build(BuildContext context) {
     final gradient = GradientStyles.getGradient(
-        widget.userData['activeItems']['iconDecoration']);
+        widget.userData?.activeItems.banner ??
+            widget.follower?.activeItems.banner);
 
     return Scaffold(
       appBar: AppBar(
@@ -60,22 +67,31 @@ class _UserProfileScreenState extends State<UserProfileScreen>
         actions: [
           if (widget.isCurrentUser)
             IconButton(
-              icon: const Icon(Icons.edit),
+              icon: const Icon(CustomIcons.add),
               onPressed: () {
-                // Navigate to Edit Profile screen.
+                // Action to add a new Link.
               },
             ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(CustomIcons.edit),
+            onPressed: () {
+              // Navigate to Edit Profile screen.
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => EditScreen()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(CustomIcons.settings),
             onPressed: () {
               // Navigate to Rewards screen.
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => Settings()));
             },
           )
         ],
         leading: widget.isCurrentUser
             ? IconButton(
-                icon: const Icon(Icons.star),
-                color: Colors.amber,
+                icon: const Icon(CustomIcons.medalstar),
                 onPressed: () {
                   // Navigate to Reward screen.
                 },
@@ -90,6 +106,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
               Center(
                 child: CardStack(
                   userData: widget.userData,
+                  follower: widget.follower,
                 ),
               ),
               const SizedBox(height: 25),
@@ -160,7 +177,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                   ),
                                   child: QrImageView(
                                       data:
-                                          'https://tomcremer.be/@${widget.userData['username']}',
+                                          'https://tomcremer.be/@${widget.userData?.username ?? widget.follower?.username}',
                                       eyeStyle: QrEyeStyle(
                                         eyeShape: QrEyeShape.square,
                                         color: gradient.colors[1],
@@ -185,10 +202,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                       ),
                                       child: Center(
                                         child: IconButton(
-                                          onPressed: () {
-
-                                          },
-                                          icon: const Icon(Icons.send_outlined),
+                                          onPressed: () {},
+                                          icon: const Icon(CustomIcons.send),
                                           color: Colors.grey[800],
                                         ),
                                       ),
@@ -207,7 +222,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                             // Download the QR code
                                           },
                                           icon: const Icon(
-                                              Icons.download_outlined),
+                                              CustomIcons.scanner),
                                           color: Colors.grey[800],
                                         ),
                                       ),
@@ -225,7 +240,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                           onPressed: () {
                                             // Action for the NFC button
                                           },
-                                          icon: const Icon(Icons.nfc_outlined),
+                                          icon: const Icon(CustomIcons.nfc),
                                           color: Colors.grey[800],
                                         ),
                                       ),
