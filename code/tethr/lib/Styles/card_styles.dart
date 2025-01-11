@@ -31,8 +31,8 @@ class GradientStyles {
     end: Alignment.bottomRight,
   );
 
-  static LinearGradient getGradient(String? iconDecoration) {
-    switch (iconDecoration) {
+  static LinearGradient getGradient(String? banner) {
+    switch (banner) {
       case 'purple_card':
         return purple;
       case 'blue_card':
