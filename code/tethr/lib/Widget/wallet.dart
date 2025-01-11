@@ -3,16 +3,19 @@ import 'package:tethr/Screen/Form/Login/user_profile_screen.dart';
 import 'package:tethr/Styles/card_styles.dart';
 import 'package:tethr/Styles/colors.dart';
 import 'package:tethr/Widget/card_background.dart';
+import 'package:dto/models.dart' as dto;
 
 class Wallet extends StatelessWidget {
-  final Map<String, dynamic> userData;
-  final List<Map<String, dynamic>> purchaseData;
-  final List<Map<String, dynamic>> rewardsData;
+  dto.User? userData;
+  dto.Follow? follower;
+  List<dto.UserPurchase> purchaseData = [];
+  List<dto.UserReward> rewardsData = [];
   final bool isCurrentUser;
 
-  const Wallet({
+  Wallet({
     super.key,
-    required this.userData,
+    this.userData,
+    this.follower,
     required this.purchaseData,
     required this.rewardsData,
     this.isCurrentUser = false,
@@ -20,7 +23,7 @@ class Wallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gradient = GradientStyles.getGradient(userData['activeItems']['iconDecoration']); // Determine the gradient based on `iconDecoration`.
+    final gradient = GradientStyles.getGradient(userData?.activeItems.banner ?? follower?.activeItems.banner);
 
     return GestureDetector(
       onTap: () {
@@ -29,6 +32,7 @@ class Wallet extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => UserProfileScreen(
               userData: userData,
+              follower: follower,
               purchaseData: purchaseData,
               rewardsData: rewardsData,
               isCurrentUser: isCurrentUser,
@@ -61,7 +65,7 @@ class Wallet extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                userData['username'] ?? 'Oups! No username found',
+                userData?.username ?? follower?.username ?? 'Oups! No username found',
                 style: const TextStyle(
                   color: Color(0xFF3D3D3D),
                   fontSize: 16,
