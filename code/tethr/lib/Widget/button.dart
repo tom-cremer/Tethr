@@ -6,7 +6,6 @@ class Button extends StatelessWidget {
   final GestureTapCallback? onTap;
   final String label;
 
-
   final double verticalPadding;
   final double verticalMargin;
   final double horizontalMargin;
@@ -14,10 +13,11 @@ class Button extends StatelessWidget {
 
   final Color color;
 
-
+  final dynamic child;
 
   const Button({
-    required this.label,
+    this.label = '',
+    this.child = null,
     this.onTap,
     this.verticalPadding = kButtonNavVertical,
     this.verticalMargin = kButtonNavVertical,
@@ -47,15 +47,18 @@ class Button extends StatelessWidget {
             backgroundColor: color,
           ),
           onPressed: onTap,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: kBlackText,
-              fontWeight: FontWeight.normal,
-              fontSize: 18,
-            ),
-          ),
+          child: (child != null)
+              ? child
+              : Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: kBlackText,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 18,
+                    fontFamily: 'Lexend',
+                  ),
+                ),
         ),
       ),
     );
