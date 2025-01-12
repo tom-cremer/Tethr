@@ -1,10 +1,13 @@
 import 'package:dto/models.dart' as dto;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:qr_code_dart_scan/qr_code_dart_scan.dart';
 import 'package:tethr/Helpers/firestore_helper.dart';
+import 'package:tethr/Helpers/qrHelpers.dart';
 import 'package:tethr/Screen/Form/Login/shop_screen.dart';
 import 'package:tethr/Screen/settings.dart';
 import 'package:tethr/Styles/colors.dart';
+import 'package:tethr/Widget/show_wallet_dialog.dart';
 import 'package:tethr/Widget/wallet.dart';
 import 'package:tethr/custom_icons_icons.dart';
 
@@ -18,9 +21,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   dto.User? _userData;
   List<dto.Follow> _followersData = [];
-  List<dto.UserPurchase> _purchaseData = [];
-  List<dto.UserReward> _rewardsData = [];
   bool _isLoading = true;
+  String? scannedData;
+  bool isScanning = false;
+
 
   @override
   void initState() {
@@ -40,13 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       final followersData = await FirestoreHelper.getUserFollowers();
-      final purchaseData = await FirestoreHelper.getUserPurchases();
-      final rewardsData = await FirestoreHelper.getUserRewards();
 
       setState(() {
         _followersData = followersData;
-        _purchaseData = purchaseData;
-        _rewardsData = rewardsData;
+
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -97,7 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: kYellow,))
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: kYellow,
+            ))
           : RefreshIndicator(
               color: kYellow,
               onRefresh: _onRefresh,
@@ -112,58 +116,72 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 30.0, right: 30.0, bottom: 50.0),
-                        child: Column(
+                        child: Stack(
                           children: [
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset('assets/images/logo.svg'),
-                                  const Text(
-                                    'Wallet',
-                                    style: TextStyle(
-                                      color: kBlackText,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 24,
-                                      fontFamily: 'Lexend',
+                            Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isScanning = true;
+                                    });
+                                    _launchScanner();
+                                  },
+                                  backgroundColor: kGreen,
+                                  child: Icon(CustomIcons.scanqrcode),
+                                )),
+                            Column(
+                              children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                          'assets/images/logo.svg'),
+                                      const Text(
+                                        'Wallet',
+                                        style: TextStyle(
+                                          color: kBlackText,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 24,
+                                          fontFamily: 'Lexend',
+                                        ),
+                                      ),
+                                    ]),
+                                const SizedBox(height: 20),
+                                const Row(
+                                  children: [
+                                    Text(
+                                      'You',
+                                      style: TextStyle(
+                                          color: kBlackText,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20,
+                                          fontFamily: 'Lexend'),
                                     ),
-                                  ),
-                                ]),
-                            const SizedBox(height: 20),
-                            const Row(
-                              children: [
-                                Text(
-                                  'You',
-                                  style: TextStyle(
-                                      color: kBlackText,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20,
-                                      fontFamily: 'Lexend'),
+                                  ],
                                 ),
+                                const SizedBox(height: 10),
+                                Wallet(
+                                  uid: _userData!.uid,
+                                ),
+                                const SizedBox(height: 30),
+                                const Row(
+                                  children: [
+                                    Text(
+                                      'Followings',
+                                      style: TextStyle(
+                                          color: kBlackText,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20,
+                                          fontFamily: 'Lexend'),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                _buildFollowersList(_followersData),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            Wallet(
-                              userData: _userData,
-                              purchaseData: _purchaseData,
-                              rewardsData: _rewardsData,
-                              isCurrentUser: true,
-                            ),
-                            const SizedBox(height: 30),
-                            const Row(
-                              children: [
-                                Text(
-                                  'Followings',
-                                  style: TextStyle(
-                                      color: kBlackText,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20,
-                                      fontFamily: 'Lexend'),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            _buildFollowersList(
-                              _followersData, _purchaseData, _rewardsData),
                           ],
                         ),
                       ),
@@ -176,8 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Helper method for building the followers list
-  Widget _buildFollowersList(List<dto.Follow> followersData,
-      List<dto.UserPurchase> purchaseData, List<dto.UserReward> rewardsData) {
+  Widget _buildFollowersList(List<dto.Follow> followersData) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -185,14 +202,100 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (context, index) {
         final follower = followersData[index];
         return Wallet(
-          follower: follower,
-          purchaseData: purchaseData,
-          rewardsData: rewardsData,
+          uid: follower.uid,
         );
       },
       separatorBuilder: (context, index) {
         return const SizedBox(height: 16);
       },
     );
+  }
+  void _showWalletDialog(String uid) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ShowWalletDialog(uid: uid);
+      },
+    );
+  }
+
+  void _launchScanner() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Scan QR Code',
+                          style: TextStyle(
+                              color: kBlackText,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              fontFamily: 'Lexend')),
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(CustomIcons.close))
+                    ],
+                  ),
+                  Container(
+                    height: 230,
+                    width: 230,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Expanded(
+                      child: QRCodeDartScanView(
+                        scanInvertedQRCode: true,
+                        onCapture: (data) async {
+                          final decodedData = QrHelpers.decodeQRCodeData(data.text);
+                          if (decodedData == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  showCloseIcon: true,
+                                  backgroundColor: kGrayLight,
+                                  content: Text('Oups! This Qr Code is not valid 🤨')),
+                            );
+                            return;
+                          }
+                          final userExists = await FirestoreHelper.checkUserExist(decodedData);
+                          if (userExists) {
+                            setState(() {
+                              scannedData = decodedData;
+                              isScanning = false;
+                            });
+                            if (decodedData == _userData!.uid) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  showCloseIcon: true,
+                                  backgroundColor: kGrayLight,
+                                  content: Text('Nice Try! But you cannot scan own QR code 😆'),
+                                ),
+                              );
+                              return;
+                            }
+                            Navigator.pop(context);
+                            _showWalletDialog(decodedData);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  showCloseIcon: true,
+                                  backgroundColor: kGrayLight,
+                                  content: Text('Oups! Unfortunatly this user does not exist 😔')),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          );
+        });
   }
 }
