@@ -1,28 +1,25 @@
 import 'package:dto/models.dart' as dto;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:qr_code_dart_scan/qr_code_dart_scan.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:tethr/Screen/settings.dart';
+import 'package:tethr/Helpers/firestore_helper.dart';
+import 'package:tethr/Helpers/qrHelpers.dart';
 import 'package:tethr/Styles/card_styles.dart';
 import 'package:tethr/Styles/colors.dart';
+import 'package:tethr/Widget/button.dart';
 import 'package:tethr/Widget/card_stack.dart';
-import 'package:tethr/Screen/Form/Edit/edit_screen.dart';
+import 'package:tethr/Widget/show_wallet_dialog.dart';
+import 'package:tethr/Widget/tiny_button.dart';
+import 'package:tethr/Widget/wallet.dart';
 import 'package:tethr/custom_icons_icons.dart';
+import 'package:tethr/main.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  dto.User? userData;
-  dto.Follow? follower;
-  List<dto.UserPurchase> purchaseData = [];
-  List<dto.UserReward> rewardsData = [];
-  final bool isCurrentUser;
+  final String? uid;
 
-  UserProfileScreen({
-    super.key,
-    this.userData,
-    this.follower,
-    required this.purchaseData,
-    required this.rewardsData,
-    this.isCurrentUser = false, // Default to false for other users.
-  });
+  const UserProfileScreen({super.key, this.uid});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -30,6 +27,10 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen>
     with TickerProviderStateMixin {
+  dto.User? userData;
+  bool _isCurrentUser = false;
+  bool _isLoading = true;
+
   bool _showOverlay = false;
   double _dragPosition = 0;
   late AnimationController _animationController;
@@ -37,6 +38,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _showOverlay = true;
@@ -49,64 +51,84 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     );
   }
 
+  Future<void> _fetchUserData() async {
+    try {
+      final userData = await FirestoreHelper.getUserDataByUid(widget.uid);
+      if (userData == null) {
+        throw Exception('User document not found in Firestore.');
+      }
+
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null && currentUser.uid == widget.uid) {
+        _isCurrentUser = true;
+      }
+
+      setState(() {
+        this.userData = userData;
+        _isLoading = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(showCloseIcon: true,
+            backgroundColor: kGrayLight,
+            content: Text('Oups! Couldn\'t fetch user data 😶')),
+      );
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
 
+  String? scannedData;
+  bool isScanning = false;
+
   @override
   Widget build(BuildContext context) {
-    final gradient = GradientStyles.getGradient(
-        widget.userData?.activeItems.banner ??
-            widget.follower?.activeItems.banner);
-
+    final gradient = GradientStyles.getGradient(userData?.activeItems.banner);
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+            child: CircularProgressIndicator(
+          color: kYellow,
+        )),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         actions: [
-          if (widget.isCurrentUser)
+          if (_isCurrentUser)
             IconButton(
-              icon: const Icon(CustomIcons.add),
+              icon: const Icon(CustomIcons.edit),
               onPressed: () {
-                // Action to add a new Link.
+                // Navigate to Edit Profile screen
               },
             ),
           IconButton(
-            icon: const Icon(CustomIcons.edit),
-            onPressed: () {
-              // Navigate to Edit Profile screen.
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => EditScreen()));
-            },
-          ),
-          IconButton(
             icon: const Icon(CustomIcons.settings),
             onPressed: () {
-              // Navigate to Rewards screen.
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => Settings()));
+              // Navigate to Settings screen
             },
-          )
+          ),
         ],
-        leading: widget.isCurrentUser
+        leading: _isCurrentUser
             ? IconButton(
                 icon: const Icon(CustomIcons.medalstar),
                 onPressed: () {
-                  // Navigate to Reward screen.
+                  // Navigate to Rewards screen
                 },
               )
             : null,
       ),
       body: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
         child: Center(
           child: Column(
             children: [
               Center(
                 child: CardStack(
-                  userData: widget.userData,
-                  follower: widget.follower,
+                  uid: widget.uid,
                 ),
               ),
               const SizedBox(height: 25),
@@ -175,77 +197,123 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: QrImageView(
-                                      data:
-                                          'https://tomcremer.be/@${widget.userData?.username ?? widget.follower?.username}',
-                                      eyeStyle: QrEyeStyle(
-                                        eyeShape: QrEyeShape.square,
-                                        color: gradient.colors[1],
-                                      ),
-                                      dataModuleStyle: QrDataModuleStyle(
-                                        dataModuleShape:
-                                            QrDataModuleShape.square,
-                                        color: gradient.colors[1],
-                                      ),
-                                      version: QrVersions.auto,
-                                      size: 200),
+                                  child: isScanning
+                                      ? Expanded(
+                                          child: QRCodeDartScanView(
+                                            scanInvertedQRCode: true,
+                                            onCapture: (data) async {
+                                              final decodedData = QrHelpers.decodeQRCodeData(data.text);
+                                              if (decodedData == null) {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                      showCloseIcon: true,
+                                                      backgroundColor: kGrayLight,
+                                                      content: Text('Oups! This Qr Code is not valid 🤨')),
+                                                );
+                                                return;
+                                              }
+                                              final userExists = await FirestoreHelper.checkUserExist(decodedData);
+                                              if (userExists) {
+                                                setState(() {
+                                                  scannedData = decodedData;
+                                                  isScanning = false;
+                                                });
+                                                if (decodedData == widget.uid) {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(
+                                                      showCloseIcon: true,
+                                                      backgroundColor: kGrayLight,
+                                                      content: Text('Nice Try! But you cannot scan own QR code 😆'),
+                                                    ),
+                                                  );
+                                                  return;
+                                                }
+                                                _showWalletDialog(decodedData);
+                                              } else {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                      showCloseIcon: true,
+                                                      backgroundColor: kGrayLight,
+                                                      content: Text('Oups! Unfortunatly this user does not exist 😔')),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        )
+                                      : QrImageView(
+                                          data: QrHelpers.encodeQRCodeData(widget.uid),
+                                          eyeStyle: QrEyeStyle(
+                                            eyeShape: QrEyeShape.square,
+                                            color: gradient.colors[1],
+                                          ),
+                                          dataModuleStyle: QrDataModuleStyle(
+                                            dataModuleShape:
+                                                QrDataModuleShape.square,
+                                            color: gradient.colors[1],
+                                          ),
+                                          version: QrVersions.auto,
+                                          size: 200),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        color: kBlue,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Center(
-                                        child: IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(CustomIcons.send),
-                                          color: Colors.grey[800],
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      if (!_isCurrentUser)
+                                        TinyButton(
+                                            icon: CustomIcons.heart,
+                                            label: 'Follow',
+                                            containerColor: kBlue),
+                                      Container(
+                                        height: 50,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                          color: kGreen,
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                        ),
+                                        child: Center(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              // Activate the scanner
+                                              if (isScanning) {
+                                                setState(() {
+                                                  isScanning = false;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  isScanning = true;
+                                                });
+                                              }
+                                            },
+                                            icon: const Icon(
+                                                CustomIcons.scanqrcode),
+                                            color: Colors.grey[800],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 30),
-                                    Container(
-                                      height: 50,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        color: kGreen,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Center(
-                                        child: IconButton(
-                                          onPressed: () {
-                                            // Download the QR code
-                                          },
-                                          icon: const Icon(
-                                              CustomIcons.scanner),
-                                          color: Colors.grey[800],
+                                      Container(
+                                        height: 50,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                          color: kPurple,
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                        ),
+                                        child: Center(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              // Activate the NFC
+                                            },
+                                            icon: const Icon(CustomIcons.nfc),
+                                            color: Colors.grey[800],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 30),
-                                    Container(
-                                      height: 50,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        color: kPurple,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Center(
-                                        child: IconButton(
-                                          onPressed: () {
-                                            // Action for the NFC button
-                                          },
-                                          icon: const Icon(CustomIcons.nfc),
-                                          color: Colors.grey[800],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
@@ -260,6 +328,15 @@ class _UserProfileScreenState extends State<UserProfileScreen>
           ),
         ),
       ),
+    );
+  }
+
+  void _showWalletDialog(String uid) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ShowWalletDialog(uid: uid);
+      },
     );
   }
 }
