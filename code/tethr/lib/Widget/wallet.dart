@@ -1,44 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tethr/Helpers/firestore_helper.dart';
 import 'package:tethr/Screen/Form/Login/user_profile_screen.dart';
 import 'package:tethr/Styles/card_styles.dart';
 import 'package:tethr/Styles/colors.dart';
 import 'package:tethr/Widget/card_background.dart';
 import 'package:dto/models.dart' as dto;
 
-class Wallet extends StatelessWidget {
-  dto.User? userData;
-  dto.Follow? follower;
-  List<dto.UserPurchase> purchaseData = [];
-  List<dto.UserReward> rewardsData = [];
-  final bool isCurrentUser;
+class Wallet extends StatefulWidget {
+  final String uid;
 
   Wallet({
     super.key,
-    this.userData,
-    this.follower,
-    required this.purchaseData,
-    required this.rewardsData,
-    this.isCurrentUser = false,
+    required this.uid,
   });
 
   @override
+  State<Wallet> createState() => _WalletState();
+}
+
+class _WalletState extends State<Wallet> {
+  dto.User? userData;
+
+  Future<void> _fetchUserData() async {
+    try {
+      final userData = await FirestoreHelper.getUserDataByUid(widget.uid);
+      if (userData == null) {
+        throw Exception('User document not found in Firestore.');
+      }
+
+      setState(() {
+        this.userData = userData;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching user data: $e')),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final gradient = GradientStyles.getGradient(userData?.activeItems.banner ?? follower?.activeItems.banner);
+    final gradient = GradientStyles.getGradient(
+        userData?.activeItems.banner);
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => UserProfileScreen(
-              userData: userData,
-              follower: follower,
-              purchaseData: purchaseData,
-              rewardsData: rewardsData,
-              isCurrentUser: isCurrentUser,
-            ),
-          ),
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) {
+            return UserProfileScreen(uid: widget.uid);
+          }),
         );
+/*
+        context.go('/profile/${widget.uid}');
+*/
+
       },
       child: Container(
         decoration: BoxDecoration(
@@ -65,7 +87,8 @@ class Wallet extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                userData?.username ?? follower?.username ?? 'Oups! No username found',
+                userData?.username ??
+                    'Oups! No username found',
                 style: const TextStyle(
                   color: Color(0xFF3D3D3D),
                   fontSize: 16,
