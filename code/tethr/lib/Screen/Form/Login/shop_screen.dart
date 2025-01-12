@@ -3,6 +3,7 @@ import 'package:dto/models.dart' as dto;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tethr/Helpers/firestore_helper.dart';
+import 'package:tethr/Helpers/shop_helper.dart';
 import 'package:tethr/Screen/settings.dart';
 import 'package:tethr/Styles/card_styles.dart';
 import 'package:tethr/Styles/colors.dart';
@@ -276,7 +277,17 @@ class _ShopScreenState extends State<ShopScreen> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (item.type == 'card') ...{
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(CustomIcons.close)),
+            ],
+          ),
+          if (item.type == kType.card)
             CardWidget(
               gradient: GradientStyles.getGradient(item.id),
               width: kMediumCardWidth,
@@ -284,12 +295,11 @@ class _ShopScreenState extends State<ShopScreen> {
               radius: kMediumCardRadius,
               iconSize: kMediumCardIconSize,
             ),
-          },
           const SizedBox(height: 10),
           SizedBox(
             width: 200,
             child: Text(
-              'You need ${item.cost} stars to purchase ${item.name}.',
+              'Are you sure you want to purchase ${item.name}.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: kBlackText,
@@ -301,12 +311,11 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
           const SizedBox(height: 10),
           Button(
-            label: 'Ok',
             verticalMargin: 10.0,
             verticalPadding: 10.0,
             horizontalMargin: 0.0,
             borderRadius: 12.0,
-            color: kYellow,
+            color: kGreen,
             onTap: () async {
               try {
                 await FirestoreHelper.purchaseItem(item.id);
@@ -319,10 +328,32 @@ class _ShopScreenState extends State<ShopScreen> {
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error purchasing item: $e')),
+                  SnackBar(content: Text('Insufficient stars!')),
                 );
               }
             },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${item.cost}',
+                  style: const TextStyle(
+                    color: kBlackText,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Lexend',
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Icon(Icons.star_rounded, color: kYellow, shadows: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 2,
+                    offset: const Offset(1, 1),
+                  ),
+                ],),
+              ],
+            ),
           ),
         ],
       ),
