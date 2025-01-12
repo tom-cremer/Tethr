@@ -14,6 +14,7 @@ const firestoreSerializable = JsonSerializable(
 /// User details stored in the global `users` collection.
 @firestoreSerializable
 class User {
+  final String uid;
   final String firstName;
   final String lastName;
   final String email;
@@ -23,6 +24,7 @@ class User {
   final ActiveItems activeItems;
 
   const User({
+    required this.uid,
     required this.firstName,
     required this.lastName,
     required this.email,
@@ -60,6 +62,7 @@ class ActiveItems {
 /// Follower data stored in the `followers` sub-collection of each user.
 @firestoreSerializable
 class Follow {
+  final String uid;
   final String firstName;
   final String lastName;
   final String email;
@@ -68,6 +71,7 @@ class Follow {
   final ActiveItems activeItems;
 
   const Follow({
+    required this.uid,
     required this.firstName,
     required this.lastName,
     required this.email,

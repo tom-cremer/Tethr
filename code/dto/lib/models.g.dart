@@ -150,6 +150,7 @@ abstract class UsersDocumentReference
   Future<void> set(
     User model, {
     SetOptions? options,
+    FieldValue uidFieldValue,
     FieldValue firstNameFieldValue,
     FieldValue lastNameFieldValue,
     FieldValue emailFieldValue,
@@ -170,6 +171,7 @@ abstract class UsersDocumentReference
     Transaction transaction,
     User model, {
     SetOptions? options,
+    FieldValue uidFieldValue,
     FieldValue firstNameFieldValue,
     FieldValue lastNameFieldValue,
     FieldValue emailFieldValue,
@@ -190,6 +192,7 @@ abstract class UsersDocumentReference
     WriteBatch batch,
     User model, {
     SetOptions? options,
+    FieldValue uidFieldValue,
     FieldValue firstNameFieldValue,
     FieldValue lastNameFieldValue,
     FieldValue emailFieldValue,
@@ -204,6 +207,8 @@ abstract class UsersDocumentReference
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update({
+    String uid,
+    FieldValue uidFieldValue,
     String firstName,
     FieldValue firstNameFieldValue,
     String lastName,
@@ -225,6 +230,8 @@ abstract class UsersDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
+    String uid,
+    FieldValue uidFieldValue,
     String firstName,
     FieldValue firstNameFieldValue,
     String lastName,
@@ -246,6 +253,8 @@ abstract class UsersDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void batchUpdate(
     WriteBatch batch, {
+    String uid,
+    FieldValue uidFieldValue,
     String firstName,
     FieldValue firstNameFieldValue,
     String lastName,
@@ -309,6 +318,7 @@ class _$UsersDocumentReference
   Future<void> set(
     User model, {
     SetOptions? options,
+    FieldValue? uidFieldValue,
     FieldValue? firstNameFieldValue,
     FieldValue? lastNameFieldValue,
     FieldValue? emailFieldValue,
@@ -319,6 +329,7 @@ class _$UsersDocumentReference
   }) async {
     final json = {
       ...model.toJson(),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -344,6 +355,7 @@ class _$UsersDocumentReference
     Transaction transaction,
     User model, {
     SetOptions? options,
+    FieldValue? uidFieldValue,
     FieldValue? firstNameFieldValue,
     FieldValue? lastNameFieldValue,
     FieldValue? emailFieldValue,
@@ -354,6 +366,7 @@ class _$UsersDocumentReference
   }) {
     final json = {
       ...model.toJson(),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -375,6 +388,7 @@ class _$UsersDocumentReference
     WriteBatch batch,
     User model, {
     SetOptions? options,
+    FieldValue? uidFieldValue,
     FieldValue? firstNameFieldValue,
     FieldValue? lastNameFieldValue,
     FieldValue? emailFieldValue,
@@ -385,6 +399,7 @@ class _$UsersDocumentReference
   }) {
     final json = {
       ...model.toJson(),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -403,6 +418,8 @@ class _$UsersDocumentReference
   }
 
   Future<void> update({
+    Object? uid = _sentinel,
+    FieldValue? uidFieldValue,
     Object? firstName = _sentinel,
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
@@ -418,6 +435,10 @@ class _$UsersDocumentReference
     Object? activeItems = _sentinel,
     FieldValue? activeItemsFieldValue,
   }) async {
+    assert(
+      uid == _sentinel || uidFieldValue == null,
+      "Cannot specify both uid and uidFieldValue",
+    );
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
       "Cannot specify both firstName and firstNameFieldValue",
@@ -447,6 +468,9 @@ class _$UsersDocumentReference
       "Cannot specify both activeItems and activeItemsFieldValue",
     );
     final json = {
+      if (uid != _sentinel)
+        _$UserFieldMap['uid']!: _$UserPerFieldToJson.uid(uid as String),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstName != _sentinel)
         _$UserFieldMap['firstName']!:
             _$UserPerFieldToJson.firstName(firstName as String),
@@ -486,6 +510,8 @@ class _$UsersDocumentReference
 
   void transactionUpdate(
     Transaction transaction, {
+    Object? uid = _sentinel,
+    FieldValue? uidFieldValue,
     Object? firstName = _sentinel,
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
@@ -501,6 +527,10 @@ class _$UsersDocumentReference
     Object? activeItems = _sentinel,
     FieldValue? activeItemsFieldValue,
   }) {
+    assert(
+      uid == _sentinel || uidFieldValue == null,
+      "Cannot specify both uid and uidFieldValue",
+    );
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
       "Cannot specify both firstName and firstNameFieldValue",
@@ -530,6 +560,9 @@ class _$UsersDocumentReference
       "Cannot specify both activeItems and activeItemsFieldValue",
     );
     final json = {
+      if (uid != _sentinel)
+        _$UserFieldMap['uid']!: _$UserPerFieldToJson.uid(uid as String),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstName != _sentinel)
         _$UserFieldMap['firstName']!:
             _$UserPerFieldToJson.firstName(firstName as String),
@@ -569,6 +602,8 @@ class _$UsersDocumentReference
 
   void batchUpdate(
     WriteBatch batch, {
+    Object? uid = _sentinel,
+    FieldValue? uidFieldValue,
     Object? firstName = _sentinel,
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
@@ -584,6 +619,10 @@ class _$UsersDocumentReference
     Object? activeItems = _sentinel,
     FieldValue? activeItemsFieldValue,
   }) {
+    assert(
+      uid == _sentinel || uidFieldValue == null,
+      "Cannot specify both uid and uidFieldValue",
+    );
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
       "Cannot specify both firstName and firstNameFieldValue",
@@ -613,6 +652,9 @@ class _$UsersDocumentReference
       "Cannot specify both activeItems and activeItemsFieldValue",
     );
     final json = {
+      if (uid != _sentinel)
+        _$UserFieldMap['uid']!: _$UserPerFieldToJson.uid(uid as String),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstName != _sentinel)
         _$UserFieldMap['firstName']!:
             _$UserPerFieldToJson.firstName(firstName as String),
@@ -702,6 +744,18 @@ abstract class UsersQuery implements QueryReference<User, UsersQuerySnapshot> {
   });
 
   UsersQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+    bool? isNull,
+  });
+
+  UsersQuery whereUid({
     String? isEqualTo,
     String? isNotEqualTo,
     String? isLessThan,
@@ -831,6 +885,18 @@ abstract class UsersQuery implements QueryReference<User, UsersQuerySnapshot> {
   });
 
   UsersQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    UsersDocumentSnapshot? startAtDocument,
+    UsersDocumentSnapshot? endAtDocument,
+    UsersDocumentSnapshot? endBeforeDocument,
+    UsersDocumentSnapshot? startAfterDocument,
+  });
+
+  UsersQuery orderByUid({
     bool descending = false,
     String startAt,
     String startAfter,
@@ -1029,6 +1095,50 @@ class _$UsersQuery extends QueryReference<User, UsersQuerySnapshot>
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         whereIn: whereIn,
         whereNotIn: whereNotIn,
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  UsersQuery whereUid({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$UsersQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserFieldMap['uid']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserPerFieldToJson.uid(isEqualTo as String)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserPerFieldToJson.uid(isNotEqualTo as String)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserPerFieldToJson.uid(isLessThan as String)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserPerFieldToJson.uid(isLessThanOrEqualTo as String)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserPerFieldToJson.uid(isGreaterThan as String)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserPerFieldToJson.uid(isGreaterThanOrEqualTo as String)
+            : null,
+        whereIn: whereIn?.map((e) => _$UserPerFieldToJson.uid(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserPerFieldToJson.uid(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -1440,6 +1550,79 @@ class _$UsersQuery extends QueryReference<User, UsersQuerySnapshot>
     UsersDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UsersQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  UsersQuery orderByUid({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UsersDocumentSnapshot? startAtDocument,
+    UsersDocumentSnapshot? endAtDocument,
+    UsersDocumentSnapshot? endBeforeDocument,
+    UsersDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$UserFieldMap['uid']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2235,6 +2418,7 @@ abstract class FollowersDocumentReference
   Future<void> set(
     User model, {
     SetOptions? options,
+    FieldValue uidFieldValue,
     FieldValue firstNameFieldValue,
     FieldValue lastNameFieldValue,
     FieldValue emailFieldValue,
@@ -2255,6 +2439,7 @@ abstract class FollowersDocumentReference
     Transaction transaction,
     User model, {
     SetOptions? options,
+    FieldValue uidFieldValue,
     FieldValue firstNameFieldValue,
     FieldValue lastNameFieldValue,
     FieldValue emailFieldValue,
@@ -2275,6 +2460,7 @@ abstract class FollowersDocumentReference
     WriteBatch batch,
     User model, {
     SetOptions? options,
+    FieldValue uidFieldValue,
     FieldValue firstNameFieldValue,
     FieldValue lastNameFieldValue,
     FieldValue emailFieldValue,
@@ -2289,6 +2475,8 @@ abstract class FollowersDocumentReference
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update({
+    String uid,
+    FieldValue uidFieldValue,
     String firstName,
     FieldValue firstNameFieldValue,
     String lastName,
@@ -2310,6 +2498,8 @@ abstract class FollowersDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
+    String uid,
+    FieldValue uidFieldValue,
     String firstName,
     FieldValue firstNameFieldValue,
     String lastName,
@@ -2331,6 +2521,8 @@ abstract class FollowersDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void batchUpdate(
     WriteBatch batch, {
+    String uid,
+    FieldValue uidFieldValue,
     String firstName,
     FieldValue firstNameFieldValue,
     String lastName,
@@ -2384,6 +2576,7 @@ class _$FollowersDocumentReference
   Future<void> set(
     User model, {
     SetOptions? options,
+    FieldValue? uidFieldValue,
     FieldValue? firstNameFieldValue,
     FieldValue? lastNameFieldValue,
     FieldValue? emailFieldValue,
@@ -2394,6 +2587,7 @@ class _$FollowersDocumentReference
   }) async {
     final json = {
       ...model.toJson(),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -2419,6 +2613,7 @@ class _$FollowersDocumentReference
     Transaction transaction,
     User model, {
     SetOptions? options,
+    FieldValue? uidFieldValue,
     FieldValue? firstNameFieldValue,
     FieldValue? lastNameFieldValue,
     FieldValue? emailFieldValue,
@@ -2429,6 +2624,7 @@ class _$FollowersDocumentReference
   }) {
     final json = {
       ...model.toJson(),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -2450,6 +2646,7 @@ class _$FollowersDocumentReference
     WriteBatch batch,
     User model, {
     SetOptions? options,
+    FieldValue? uidFieldValue,
     FieldValue? firstNameFieldValue,
     FieldValue? lastNameFieldValue,
     FieldValue? emailFieldValue,
@@ -2460,6 +2657,7 @@ class _$FollowersDocumentReference
   }) {
     final json = {
       ...model.toJson(),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstNameFieldValue != null)
         _$UserFieldMap['firstName']!: firstNameFieldValue,
       if (lastNameFieldValue != null)
@@ -2478,6 +2676,8 @@ class _$FollowersDocumentReference
   }
 
   Future<void> update({
+    Object? uid = _sentinel,
+    FieldValue? uidFieldValue,
     Object? firstName = _sentinel,
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
@@ -2493,6 +2693,10 @@ class _$FollowersDocumentReference
     Object? activeItems = _sentinel,
     FieldValue? activeItemsFieldValue,
   }) async {
+    assert(
+      uid == _sentinel || uidFieldValue == null,
+      "Cannot specify both uid and uidFieldValue",
+    );
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
       "Cannot specify both firstName and firstNameFieldValue",
@@ -2522,6 +2726,9 @@ class _$FollowersDocumentReference
       "Cannot specify both activeItems and activeItemsFieldValue",
     );
     final json = {
+      if (uid != _sentinel)
+        _$UserFieldMap['uid']!: _$UserPerFieldToJson.uid(uid as String),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstName != _sentinel)
         _$UserFieldMap['firstName']!:
             _$UserPerFieldToJson.firstName(firstName as String),
@@ -2561,6 +2768,8 @@ class _$FollowersDocumentReference
 
   void transactionUpdate(
     Transaction transaction, {
+    Object? uid = _sentinel,
+    FieldValue? uidFieldValue,
     Object? firstName = _sentinel,
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
@@ -2576,6 +2785,10 @@ class _$FollowersDocumentReference
     Object? activeItems = _sentinel,
     FieldValue? activeItemsFieldValue,
   }) {
+    assert(
+      uid == _sentinel || uidFieldValue == null,
+      "Cannot specify both uid and uidFieldValue",
+    );
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
       "Cannot specify both firstName and firstNameFieldValue",
@@ -2605,6 +2818,9 @@ class _$FollowersDocumentReference
       "Cannot specify both activeItems and activeItemsFieldValue",
     );
     final json = {
+      if (uid != _sentinel)
+        _$UserFieldMap['uid']!: _$UserPerFieldToJson.uid(uid as String),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstName != _sentinel)
         _$UserFieldMap['firstName']!:
             _$UserPerFieldToJson.firstName(firstName as String),
@@ -2644,6 +2860,8 @@ class _$FollowersDocumentReference
 
   void batchUpdate(
     WriteBatch batch, {
+    Object? uid = _sentinel,
+    FieldValue? uidFieldValue,
     Object? firstName = _sentinel,
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
@@ -2659,6 +2877,10 @@ class _$FollowersDocumentReference
     Object? activeItems = _sentinel,
     FieldValue? activeItemsFieldValue,
   }) {
+    assert(
+      uid == _sentinel || uidFieldValue == null,
+      "Cannot specify both uid and uidFieldValue",
+    );
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
       "Cannot specify both firstName and firstNameFieldValue",
@@ -2688,6 +2910,9 @@ class _$FollowersDocumentReference
       "Cannot specify both activeItems and activeItemsFieldValue",
     );
     final json = {
+      if (uid != _sentinel)
+        _$UserFieldMap['uid']!: _$UserPerFieldToJson.uid(uid as String),
+      if (uidFieldValue != null) _$UserFieldMap['uid']!: uidFieldValue,
       if (firstName != _sentinel)
         _$UserFieldMap['firstName']!:
             _$UserPerFieldToJson.firstName(firstName as String),
@@ -2778,6 +3003,18 @@ abstract class FollowersQuery
   });
 
   FollowersQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+    bool? isNull,
+  });
+
+  FollowersQuery whereUid({
     String? isEqualTo,
     String? isNotEqualTo,
     String? isLessThan,
@@ -2907,6 +3144,18 @@ abstract class FollowersQuery
   });
 
   FollowersQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    FollowersDocumentSnapshot? startAtDocument,
+    FollowersDocumentSnapshot? endAtDocument,
+    FollowersDocumentSnapshot? endBeforeDocument,
+    FollowersDocumentSnapshot? startAfterDocument,
+  });
+
+  FollowersQuery orderByUid({
     bool descending = false,
     String startAt,
     String startAfter,
@@ -3107,6 +3356,50 @@ class _$FollowersQuery extends QueryReference<User, FollowersQuerySnapshot>
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         whereIn: whereIn,
         whereNotIn: whereNotIn,
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  FollowersQuery whereUid({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$FollowersQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserFieldMap['uid']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserPerFieldToJson.uid(isEqualTo as String)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserPerFieldToJson.uid(isNotEqualTo as String)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserPerFieldToJson.uid(isLessThan as String)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserPerFieldToJson.uid(isLessThanOrEqualTo as String)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserPerFieldToJson.uid(isGreaterThan as String)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserPerFieldToJson.uid(isGreaterThanOrEqualTo as String)
+            : null,
+        whereIn: whereIn?.map((e) => _$UserPerFieldToJson.uid(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserPerFieldToJson.uid(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3518,6 +3811,79 @@ class _$FollowersQuery extends QueryReference<User, FollowersQuerySnapshot>
     FollowersDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$FollowersQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  FollowersQuery orderByUid({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    FollowersDocumentSnapshot? startAtDocument,
+    FollowersDocumentSnapshot? endAtDocument,
+    FollowersDocumentSnapshot? endBeforeDocument,
+    FollowersDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$UserFieldMap['uid']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -11115,6 +11481,7 @@ class ShopQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<ShopItem>
 // **************************************************************************
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
+      uid: json['uid'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       email: json['email'] as String,
@@ -11128,6 +11495,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
     );
 
 const _$UserFieldMap = <String, String>{
+  'uid': 'uid',
   'firstName': 'firstName',
   'lastName': 'lastName',
   'email': 'email',
@@ -11139,6 +11507,8 @@ const _$UserFieldMap = <String, String>{
 
 // ignore: unused_element
 abstract class _$UserPerFieldToJson {
+  // ignore: unused_element
+  static Object? uid(String instance) => instance;
   // ignore: unused_element
   static Object? firstName(String instance) => instance;
   // ignore: unused_element
@@ -11156,6 +11526,7 @@ abstract class _$UserPerFieldToJson {
 }
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+      'uid': instance.uid,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'email': instance.email,
@@ -11200,6 +11571,7 @@ Map<String, dynamic> _$ActiveItemsToJson(ActiveItems instance) =>
     };
 
 Follow _$FollowFromJson(Map<String, dynamic> json) => Follow(
+      uid: json['uid'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       email: json['email'] as String,
@@ -11212,6 +11584,7 @@ Follow _$FollowFromJson(Map<String, dynamic> json) => Follow(
     );
 
 const _$FollowFieldMap = <String, String>{
+  'uid': 'uid',
   'firstName': 'firstName',
   'lastName': 'lastName',
   'email': 'email',
@@ -11222,6 +11595,8 @@ const _$FollowFieldMap = <String, String>{
 
 // ignore: unused_element
 abstract class _$FollowPerFieldToJson {
+  // ignore: unused_element
+  static Object? uid(String instance) => instance;
   // ignore: unused_element
   static Object? firstName(String instance) => instance;
   // ignore: unused_element
@@ -11237,6 +11612,7 @@ abstract class _$FollowPerFieldToJson {
 }
 
 Map<String, dynamic> _$FollowToJson(Follow instance) => <String, dynamic>{
+      'uid': instance.uid,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'email': instance.email,
