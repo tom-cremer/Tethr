@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tethr/Helpers/firestore_helper.dart';
 import 'package:tethr/Styles/card_styles.dart';
 import 'package:tethr/Styles/colors.dart';
 import 'package:tethr/Widget/card_background.dart';
@@ -6,17 +7,41 @@ import 'package:dto/models.dart' as dto;
 import 'package:url_launcher/url_launcher.dart';
 
 class CardStack extends StatefulWidget {
-  dto.User? userData;
-  dto.Follow? follower;
+  final String? uid;
 
-  CardStack({super.key, this.userData, this.follower});
+  CardStack({super.key, this.uid});
 
   @override
   State<CardStack> createState() => _CardStackState();
 }
 
 class _CardStackState extends State<CardStack> {
+  dto.User? userData;
   Future<void>? _launched;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    try {
+      final userData = await FirestoreHelper.getUserDataByUid(widget.uid);
+      if (userData == null) {
+        throw Exception('User document not found in Firestore.');
+      }
+      
+      setState(() {
+        this.userData = userData;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching user data: $e')),
+      );
+    }
+  }
+
 
   Future<void> _launchInBrowser(Uri url) async {
     if (!await launchUrl(
@@ -30,8 +55,7 @@ class _CardStackState extends State<CardStack> {
   @override
   Widget build(BuildContext context) {
     final gradient = GradientStyles.getGradient(
-        widget.userData?.activeItems.banner ??
-            widget.follower?.activeItems.banner);
+        userData?.activeItems.banner);
 
     return Stack(children: [
       CardWidget(
@@ -64,7 +88,7 @@ class _CardStackState extends State<CardStack> {
                             fontFamily: 'Lexend'),
                       ),
                       Text(
-                        '${widget.userData?.firstName ?? widget.follower?.firstName} ${widget.userData?.lastName ?? widget.follower?.lastName}',
+                        '${userData?.firstName} ${userData?.lastName}',
                         style: const TextStyle(
                             color: kWhite,
                             fontSize: 20,
@@ -82,7 +106,7 @@ class _CardStackState extends State<CardStack> {
                             fontFamily: 'Lexend'),
                       ),
                       Text(
-                        '@${widget.userData?.username ?? widget.follower?.username}',
+                        '@${userData?.username}',
                         style: const TextStyle(
                             color: kWhite,
                             fontSize: 16,
@@ -109,7 +133,7 @@ class _CardStackState extends State<CardStack> {
                 ],
               ),
               const SizedBox(height: 10),
-              _buildLinksButton(widget.userData, widget.follower),
+              _buildLinksButton(userData),
             ],
           ),
         ),
@@ -117,8 +141,8 @@ class _CardStackState extends State<CardStack> {
     ]);
   }
 
-  Widget _buildLinksButton(dto.User? userData, dto.Follow? follower) {
-    final links = userData?.links ?? follower?.links;
+  Widget _buildLinksButton(dto.User? userData) {
+    final links = userData?.links;
     return ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
