@@ -43,7 +43,7 @@ class FirestoreHelper {
   }
 
   /// Get user data by UID as a `User` DTO.
-  static Future<dto.User?> getUserDataByUid(String uid) async {
+  static Future<dto.User?> getUserDataByUid(String? uid) async {
     final userDoc = await usersRef.doc(uid).get();
     return userDoc.data();
   }
@@ -157,6 +157,7 @@ class FirestoreHelper {
       }
 
       final updatedUser = dto.User(
+        uid: user.uid,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -186,4 +187,11 @@ class FirestoreHelper {
       );
     });
   }
+  
+  /// Check if user exist in Firestore.
+  static Future<bool> checkUserExist(String uid) async {
+    final userDoc = await usersRef.doc(uid).get();
+    return userDoc.exists;
+  }
+
 }
