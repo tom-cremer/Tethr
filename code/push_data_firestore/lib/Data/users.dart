@@ -13,7 +13,7 @@ const List<User> users = [
       iconDecoration: "purple_card",
       backgroundDecoration: "forest_theme",
       nameTag: "style=bold",
-    ),
+    ), uid: '',
   ),
   User(
     firstName: "Alan",
@@ -27,7 +27,7 @@ const List<User> users = [
       iconDecoration: "orange_card",
       backgroundDecoration: null,
       nameTag: "style=italic",
-    ),
+    ), uid: '',
   ),
   User(
     firstName: "Grace",
@@ -41,7 +41,7 @@ const List<User> users = [
       iconDecoration: "pink_card",
       backgroundDecoration: "forest_theme",
       nameTag: "style=underline",
-    ),
+    ), uid: '',
   ),
   User(
     firstName: "Linus",
@@ -55,7 +55,7 @@ const List<User> users = [
       iconDecoration: "pink_card",
       backgroundDecoration: "matrix_theme",
       nameTag: "style=underline",
-    ),
+    ), uid: '',
   ),
   User(
     firstName: "Margaret",
@@ -69,7 +69,7 @@ const List<User> users = [
       iconDecoration: "blue_card",
       backgroundDecoration: "matrix_theme",
       nameTag: "style=bold",
-    ),
+    ), uid: '',
   ),
   User(
     firstName: "Tim",
@@ -83,6 +83,6 @@ const List<User> users = [
       iconDecoration: "blue_card",
       backgroundDecoration: "forest_theme",
       nameTag: "style=italic",
-    ),
+    ), uid: '',
   ),
 ];
