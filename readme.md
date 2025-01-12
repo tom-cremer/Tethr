@@ -1,43 +1,132 @@
-# Documentation
-
-> Vous vous adressez potentiellement à un futur employeur et donc une personne qui n'aura pas nécessairement l'occasion de compiler votre projet. Votre `readme.md` contiendra donc au moins :
-
-
+# Tethr
 
 ## 📁 Présentation des Principaux Dossiers
 
-Une présentation des principaux dossiers de votre dépôt. Quelles sont les différentes ressources qu'il contient à la racine ? Par exemple, les maquettes, vos inspirations, etc. Si vous avez fait des efforts quant à l'organisation de vos fichiers dans le dossier `lib`, expliquez-les ici.
+Voici une vue d'ensemble des principaux dossiers de ce projet et leur contenu :
+
+- **`lib/`** : Dossier principal contenant le code source de l'application Flutter. Organisé comme suit :
+    - **`Screen/`** : Toutes les pages de l'application, comme `home_screen.dart`, `user_profile_screen.dart`, etc.
+    - **`Helpers/`** : Les utilitaires et fonctions réutilisables, *Principe DRY* ou *Don't Repeat Yourself*,
+    - **`Styles/`** : Les styles pour la personnalisation de l'application, incluant les couleurs, marges et gradients, etc.
+    - **`Widget/`** : Les widgets personnalisés réutilisables (ex. `Wallet`, `Button`, etc.).
+    - **`Fonts/`** : Les polices personnalisées utilisées dans l'application.
+
+- **`assets/`** : Contient les fichiers statiques, tels que :
+    - **`images/`** : Logos et visuels utilisés dans l'application.
 
 
+- **`android/`** : Les configurations natives pour Android, comme les manifestes, les fichiers de configuration
+  Firebase, etc.
+
+- **`pubspec.yaml`** : Fichier de configuration où sont listées les dépendances Flutter utilisées (ex. `go_router`,
+  `qr_code_dart_scan`, `firebase_auth`).
+
+---
 
 ## 🚀 Présentation de l'Application
 
-> Une présentation de votre application. Ce dernier répond à un besoin, présentez-le. Ne faites aucune hypothèse sur le niveau de connaissances de votre lecteur. Vous vous adressez ici à un internaute quelconque qui découvre votre dépôt. Évitez un jargon technique dans cette partie de votre présentation.
+**Tethr** est une application conçue pour permettre aux utilisateurs de partager leurs informations et liens via
+un **profil numérique**. Chaque utilisateur dispose d’une "carte profil" unique, qui peut être partagée via
+un QR code. L’application répond au besoin croissant de centraliser des informations personnelles
+de manière intuitive et sécurisée.
+
+---
 
 ## 🌐 Étude de l'Existant
 
-> Une brève étude de l'existant. L'idée étant de savoir si d'autres ont déjà couvert le besoin auquel vous essayez de répondre. Ce qui est demandé ici, au-delà d'une brève description, ce sont les points forts et les points faibles de ces différentes applications. Il peut être intéressant de faire un tableau pour mettre en regard les avantages et les inconvénients. Enfin, mettez des captures d'écran des applications afin que l'on comprenne mieux de quoi on parle.
+**Applications similaires** :
+
+| Application  | Points forts                                 | Points faibles                                            |
+|--------------|----------------------------------------------|-----------------------------------------------------------|
+| **Linktree** | Simplicité d'utilisation, nombreux thèmes.   | Fonctionnalités premium limitées en version gratuite.     |
+| **HiHello**  | Intégration NFC et carte virtuelle élégante. | Interface parfois confuse pour les nouveaux utilisateurs. |
+| **Beacon**   | Personnalisation des profils avancée.        | Moins connu, support limité.                              |
+
+**Ce que Tethr apporte** :
+
+- Gestion des profils avec QR codes.
+- Sécurité renforcée grâce à des signatures HMAC sur les QR codes.
+
+---
 
 ## 🎯 Public Cible
 
-> Parlez de votre public cible. À qui s'adresse votre application et surtout comment prenez-vous en compte ce public-là ?
+Tethr s’adresse à des utilisateurs variés :
+
+1. **Professionnels** : Réseautage rapide lors d’événements grâce au QR code.
+2. **Étudiants et freelances** : Partager un portfolio ou des liens vers des projets.
+3. **Influenceurs** : Centraliser des liens vers différents réseaux sociaux.
+
+---
 
 ## 📋 Fonctionnalités
 
-> Une présentation des différentes fonctionnalités de votre application au travers de récits utilisateurs (user story). Soit une description courte et simple d’un besoin ou d’une attente exprimée par un utilisateur. Chacun de ces récits suit la syntaxe "En tant que <qui>, je veux <quoi> afin de <pourquoi>":
+### **Création d’un profil**
 
-> Le `qui` indique le rôle/statut de l’utilisateur à ce moment-là. Par exemple "membre premium" ou "utilisateur non identifié". Pour mieux illustrer la diversité des besoins, on peut également utiliser le concept de persona, c'est-à-dire une personne fictive et représentative à laquelle on peut s'identifier pour mieux comprendre ses attentes. L'identification et la description des personas se fait alors avant de commencer l'écriture des récits utilisateurs. Par exemple, "Odile est une enseignante qui utilise pour la première fois le système".
+- **Récit utilisateur** : *En tant qu’utilisateur, je veux créer un profil avec mes informations pour pouvoir le
+  partager facilement.*
+- Permet de personnaliser des informations comme le nom, son avatar, les liens, notre carte, etc.
 
-> Le `quoi` décrit succinctement la fonctionnalité ou le comportement attendu. Le but du récit n'est pas d'en fournir une explication exhaustive.
+### **Partage de la carte profil**
 
-> Le `pourquoi` permet d'identifier l'intérêt de la fonctionnalité et d'en justifier le développement. Il permet également de mieux évaluer la priorité des fonctionnalités. Pour chacune de ces fonctionnalités, présentées par un récit utilisateur, vous présenterez les maquettes qui s'y rapportent.
+- **Récit utilisateur** : *En tant qu’utilisateur, je veux partager mon profil via un QR code pour un accès rapide par
+  d’autres personnes ayant l'application installé.*
+- Génération sécurisée des QR codes avec signature HMAC.
+
+### **Scanner un QR code**
+
+- **Récit utilisateur** : *En tant qu’utilisateur, je veux scanner un QR code pour accéder rapidement au profil d’une
+  autre personne en étant dans l'app.*
+- Intégration avec `qr_code_dart_scan`.
+
+### **Gestion des followers**
+
+- **Récit utilisateur** : *En tant qu’utilisateur, je veux suivre les personnes dont j'ai liké ou scanné retrouver
+  facilement plus tard.*
+- Suivi des profils liké et scanné (l'ajout par le scan doit étre activé dans les paramètres).
+
+### **Maquettes et illustrations**
+
+Ajoutez ici les maquettes ou captures d’écran des fonctionnalités.
+
+---
 
 ## 📈 État d'Avancement
 
->  Un état d'avancement pour chaque fonctionnalité de votre application. Ceci doit évidemment être mis à jour régulièrement. Dès lors que vous aurez terminé de programmer une fonctionnalité, ajoutez dans le document `readme.md` un `.gif` qui l'illustre. Vous pouvez vous servir de [GIF Brewery](https://apps.apple.com/us/app/gif-brewery-3-by-gfycat/id1081413713?mt=12) (Si vous êtes sous macOS) ou de [Gyazo](https://gyazo.com) (Si vous êtes sous Windows).
+| Fonctionnalité                | Statut     |
+|-------------------------------|------------|
+| Création d’un profil          | ✅ Terminée |
+| Scanner et ajout de followers | ✅ Terminée |
 
-
+---
 
 ## ⚙️ Compilation de l'Application
 
-> Enfin, nous vous demandons d'ajouter une section pour les dev où vous expliquez ce qu'il faut faire pour pouvoir compiler l'application. Cette documentation doit être simple et surtout efficace.
+### **Prérequis**
+
+- Flutter SDK installé.
+- Fichier `google-services.json` configuré pour Firebase avec votre clé d'API (Dans le cas de `google-services.json` vous avez juste a remplacer la clé).
+- Fichier `firebase_options.dart` configuré pour Firebase avec votre clé d'API.
+
+### **Étapes**
+
+1. Clonez ce dépôt :
+   ```bash 
+    git clone https://github.com/trans-dam-2024-2025/projet-d-examen-2425-infographie-tom-cremer.git
+    ```
+
+2. Ouvrez le dossier du projet dans votre éditeur de code favori.
+
+3. Installez les dépendances du projet :
+
+   ```bash
+   flutter pub get
+   ```
+
+4. Exécutez l'application sur un émulateur ou un appareil connecté :
+
+   ```bash
+   flutter run
+   ```
+
+---
