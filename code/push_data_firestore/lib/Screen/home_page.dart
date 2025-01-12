@@ -140,19 +140,33 @@ class _HomeState extends State<Home> {
     for (var user in users) {
       try {
         final authResult =
-            await auth.FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await auth.FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: user.email,
           password: "123456789",
         );
 
         final uid = authResult.user?.uid;
+
         if (uid != null) {
-          await usersRef.doc(uid).set(user);
+          final newUser = User(
+            uid: uid,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+            links: user.links,
+            starPoints: user.starPoints,
+            activeItems: user.activeItems,
+          );
+
+          // Save the user with UID to Firestore.
+          await usersRef.doc(uid).set(newUser);
 
           // Assign initial rewards and purchases.
           await assignInitialRewardsAndPurchases(uid);
 
-          userMap[uid] = user;
+          // Store the user in the map for use in followers.
+          userMap[uid] = newUser;
 
           setState(() {
             _description.insert(0, "User ${user.email} created with UID $uid");
