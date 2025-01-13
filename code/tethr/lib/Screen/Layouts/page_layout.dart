@@ -8,7 +8,7 @@ class PageLayout extends StatelessWidget {
   final bool showBackButton;
 
   const PageLayout(
-      {required this.child, this.showBackButton = true, super.key});
+      {required this.child, this.showBackButton = false, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +39,7 @@ class PageLayout extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
+
                 Navigator.of(context).pop();
               },
             ),
