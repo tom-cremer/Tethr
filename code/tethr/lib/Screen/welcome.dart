@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tethr/Screen/Form/Login/login_screen.dart';
 import 'package:tethr/Screen/Layouts/page_layout.dart';
 import 'package:tethr/Widget/button.dart';
-import 'package:tethr/Screen/on_boarding1.dart';
+import 'package:tethr/Screen/on_boarding.dart';
 import 'package:tethr/Styles/spacings.dart';
 import 'package:tethr/Styles/colors.dart';
 
@@ -10,9 +10,8 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         body: PageLayout(
-          showBackButton: false,
+      showBackButton: false,
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -50,18 +49,26 @@ class Welcome extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const OnBoarding1(),
+                    builder: (context) => OnBoarding(),
                   ),
                 );
               },
             ),
-            TextButton(onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen()),
-              );
-            }, child: const Text('Already have an account? Login'),),
-
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                  );
+                },
+                child: const Text(
+                  'Already have an account? Login',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: kGray,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Lexend'),
+                )),
           ],
         ),
       ),
