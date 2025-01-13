@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tethr/Screen/Form/Login/user_profile_screen.dart';
 import 'package:tethr/Widget/wallet.dart';
 import 'package:tethr/Styles/colors.dart';
 import 'package:tethr/Widget/button.dart';
@@ -48,7 +49,11 @@ class ShowWalletDialog extends StatelessWidget {
             borderRadius: 12.0,
             color: kGreen,
             onTap: () {
-              context.go('/profile/$uid');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserProfileScreen(uid: uid),
+                ),
+              );
             },
           )
         ],
