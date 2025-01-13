@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tethr/Helpers/firestore_helper.dart';
 import 'package:tethr/Styles/card_styles.dart';
 import 'package:tethr/Styles/colors.dart';
+import 'package:tethr/Styles/texts.dart';
 import 'package:tethr/Widget/card_background.dart';
 import 'package:dto/models.dart' as dto;
+import 'package:tethr/custom_icons_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CardStack extends StatefulWidget {
@@ -28,20 +30,18 @@ class _CardStackState extends State<CardStack> {
   Future<void> _fetchUserData() async {
     try {
       final userData = await FirestoreHelper.getUserDataByUid(widget.uid);
-      if (userData == null) {
-        throw Exception('User document not found in Firestore.');
-      }
-      
       setState(() {
         this.userData = userData;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error fetching user data: $e')),
+        SnackBar(
+            showCloseIcon: true,
+            backgroundColor: kGrayLight,
+            content: Text(kErrorFetchUser)),
       );
     }
   }
-
 
   Future<void> _launchInBrowser(Uri url) async {
     if (!await launchUrl(
@@ -54,8 +54,7 @@ class _CardStackState extends State<CardStack> {
 
   @override
   Widget build(BuildContext context) {
-    final gradient = GradientStyles.getGradient(
-        userData?.activeItems.banner);
+    final gradient = GradientStyles.getGradient(userData?.activeItems.banner);
 
     return Stack(children: [
       CardWidget(
@@ -115,19 +114,12 @@ class _CardStackState extends State<CardStack> {
                       ),
                     ],
                   ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: kWhite,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.person,
-                        color: kBlack,
-                        size: 30,
-                      ),
+                  CircleAvatar(
+                    radius: 35,
+                    backgroundColor: gradient.colors[0],
+                    child: CircleAvatar(
+                      radius: 32,
+                      backgroundImage: AssetImage('assets/default_profile.png'),
                     ),
                   ),
                 ],
@@ -143,23 +135,31 @@ class _CardStackState extends State<CardStack> {
 
   Widget _buildLinksButton(dto.User? userData) {
     final links = userData?.links;
-    return ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: links?.length ?? 0,
-        itemBuilder: (context, index) {
-          final link = links?[index];
-          return IconButton(
-            onPressed: () {
-              setState(() {
-                _launched = _launchInBrowser(Uri.parse(link!));
-              });
-            },
-            icon: Icon(Icons.link),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox(height: 16);
-        });
+    return Wrap(
+        spacing: 7,
+        runSpacing: 4,
+        children: [
+          ...links?.map((link) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _launched = _launchInBrowser(Uri.parse(link!));
+                });
+              },
+              child: Container(
+                width: 45,
+                height: 45,
+                decoration: BoxDecoration(
+                  color: kWhite.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(40.0),
+                ),
+                padding: const EdgeInsets.all(10),
+                child: Center(child: const Icon(CustomIcons.link)),
+              ),
+            );
+          }).toList() ??
+              [Container()],
+        ]
+    );
   }
 }
