@@ -42,6 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final User? user = userCredential.user;
       if (user != null) {
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'uid': user.uid,
           'firstName': _firstNameController.text.trim(),
           'lastName': _lastNameController.text.trim(),
           'username': _usernameController.text.trim(),
@@ -58,11 +59,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
           MaterialPageRoute(builder: (context) => RegisterComplete()),
         );
       }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'Oops! Something went wrong. Please try again.😣';
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = 'No user found with this email.😣';
+          break;
+        case 'wrong-password':
+          errorMessage = 'Incorrect password. Please try again.😣';
+          break;
+        case 'invalid-email':
+          errorMessage = 'Invalid email address.😣';
+          break;
+        default:
+          errorMessage = 'Oops! ${e.message}';
+          break;
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             showCloseIcon: true,
-            content: Text('Registration failed: ${e.toString()}')),
+            backgroundColor: kGrayLight,
+            content: Text(errorMessage)),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -200,7 +217,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       child: const Text(
                         'Already have an account? Login!',
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: kGray,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Lexend'),
                       ),
                     ),
                   ],
