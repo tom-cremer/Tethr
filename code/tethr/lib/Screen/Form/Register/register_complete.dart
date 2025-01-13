@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gif_view/gif_view.dart';
 import 'package:tethr/Screen/Form/Login/home_screen.dart';
 import 'package:tethr/Screen/Layouts/page_layout.dart';
 import 'package:tethr/Widget/button.dart';
@@ -22,7 +23,18 @@ class RegisterComplete extends StatelessWidget {
               const LogoOnboarding(
                 subtitle: 'You\'re all set!',
               ),
-              Expanded(child: Container()),
+              Expanded(
+
+                child: GifView.asset(
+                  'assets/gifs/yay.gif',
+                  height: 200,
+                  width: 200,
+                  frameRate: 50,
+                  color: Colors.black,
+                  colorBlendMode: BlendMode.dstIn,
+                  fadeDuration: const Duration(milliseconds: 300),
+                ),
+              ),
               Button(
                 label: 'Let\'s Go',
                 onTap: () {
