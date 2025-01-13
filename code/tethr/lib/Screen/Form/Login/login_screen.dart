@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tethr/Helpers/shop_helper.dart';
 import 'package:tethr/Screen/Form/Login/home_screen.dart';
 import 'package:tethr/Screen/Form/Register/register_screen.dart';
 import 'package:tethr/Screen/Layouts/page_layout.dart';
 import 'package:tethr/Styles/colors.dart';
+import 'package:tethr/Styles/texts.dart';
 import 'package:tethr/Widget/Form/custom_input_field.dart';
 import 'package:tethr/Widget/button.dart';
 import 'package:tethr/Widget/logo_onboarding.dart';
@@ -32,14 +34,16 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text.trim(),
       );
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Login successful!')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          showCloseIcon: true,
+          backgroundColor: kGrayLight,
+          content: Text(kLoginSuccessful)));
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'An error occurred. Please try again.';
+      String errorMessage = 'Oops! Something went wrong. Please try again.';
       switch (e.code) {
         case 'user-not-found':
           errorMessage = 'No user found with this email.';
@@ -74,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height -30,
+                      minHeight: MediaQuery.of(context).size.height - 30,
                     ),
                     child: Form(
                       key: _formKey,
@@ -123,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   if (value == null || value.isEmpty) {
                                     return 'Password is required';
                                   }
-                                  if (value.length < 6) {
+                                  if (value.length < 8) {
                                     return 'Password must be at least 6 characters';
                                   }
                                   return null;
@@ -140,18 +144,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                       onTap: _loginUser,
                                       label: 'Login',
                                     ),
-
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                      builder: (context) => const RegisterScreen(),
+                                      builder: (context) =>
+                                          const RegisterScreen(),
                                     ),
                                   );
                                 },
                                 child: const Text(
                                   'Don’t have an account? Register!',
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: kGray,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Lexend'),
                                 ),
                               ),
                             ],
