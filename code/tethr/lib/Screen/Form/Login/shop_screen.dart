@@ -74,12 +74,6 @@ class _ShopScreenState extends State<ShopScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: const Icon(CustomIcons.archivebox),
-            onPressed: () {
-
-            },
-          ),
-          IconButton(
             icon: const Icon(CustomIcons.settings),
             onPressed: () {
               Navigator.of(context).push(
