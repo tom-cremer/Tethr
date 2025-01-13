@@ -52,15 +52,7 @@ class _WalletState extends State<Wallet> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) {
-            return UserProfileScreen(uid: widget.uid);
-          }),
-        );
-/*
         context.go('/profile/${widget.uid}');
-*/
-
       },
       child: Container(
         decoration: BoxDecoration(
@@ -87,8 +79,7 @@ class _WalletState extends State<Wallet> {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                userData?.username ??
-                    'Oups! No username found',
+                userData?.username ?? "Loading...",
                 style: const TextStyle(
                   color: Color(0xFF3D3D3D),
                   fontSize: 16,
