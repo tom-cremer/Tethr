@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'package:dto/models.dart' as dto;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:qr_code_dart_scan/qr_code_dart_scan.dart';
 import 'package:tethr/Helpers/firestore_helper.dart';
-import 'package:tethr/Helpers/qrHelpers.dart';
 import 'package:tethr/Screen/Form/Login/shop_screen.dart';
 import 'package:tethr/Screen/settings.dart';
 import 'package:tethr/Styles/colors.dart';
+import 'package:tethr/Styles/texts.dart';
+import 'package:tethr/Widget/show_search_bar.dart';
 import 'package:tethr/Widget/show_wallet_dialog.dart';
 import 'package:tethr/Widget/wallet.dart';
 import 'package:tethr/custom_icons_icons.dart';
@@ -24,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = true;
   String? scannedData;
   bool isScanning = false;
-
 
   @override
   void initState() {
@@ -47,11 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
       setState(() {
         _followersData = followersData;
-
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error fetching user or followers data: $e')),
+        SnackBar(
+            showCloseIcon: true,
+            backgroundColor: kGrayLight,
+            content: Text(kErrorFetchUser)),
       );
     } finally {
       setState(() {
@@ -61,6 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _onRefresh() async {
+    setState(() {
+      _isLoading = true;
+    });
     await _fetchUserDataAndFollowers();
   }
 
@@ -73,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(CustomIcons.search),
             onPressed: () {
               // Action for the notifications button (left side)
+              _showSearchBar();
             },
           ),
           IconButton(
@@ -210,6 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
   void _showWalletDialog(String uid) {
     showDialog(
       context: context,
@@ -219,82 +227,82 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showSearchBar() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SearchUserDialog();
+      },
+    );
+  }
+
   void _launchScanner() {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Scan QR Code',
-                          style: TextStyle(
-                              color: kBlackText,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              fontFamily: 'Lexend')),
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(CustomIcons.close))
-                    ],
-                  ),
-                  Container(
-                    height: 230,
-                    width: 230,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Expanded(
-                      child: QRCodeDartScanView(
-                        scanInvertedQRCode: true,
-                        onCapture: (data) async {
-                          final decodedData = QrHelpers.decodeQRCodeData(data.text);
-                          if (decodedData == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  showCloseIcon: true,
-                                  backgroundColor: kGrayLight,
-                                  content: Text('Oups! This Qr Code is not valid 🤨')),
-                            );
-                            return;
-                          }
-                          final userExists = await FirestoreHelper.checkUserExist(decodedData);
-                          if (userExists) {
-                            setState(() {
-                              scannedData = decodedData;
-                              isScanning = false;
-                            });
-                            if (decodedData == _userData!.uid) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  showCloseIcon: true,
-                                  backgroundColor: kGrayLight,
-                                  content: Text('Nice Try! But you cannot scan own QR code 😆'),
-                                ),
-                              );
-                              return;
-                            }
-                            Navigator.pop(context);
-                            _showWalletDialog(decodedData);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  showCloseIcon: true,
-                                  backgroundColor: kGrayLight,
-                                  content: Text('Oups! Unfortunatly this user does not exist 😔')),
-                            );
-                          }
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Scan QR Code',
+                        style: TextStyle(
+                            color: kBlackText,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            fontFamily: 'Lexend')),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
                         },
-                      ),
-                    ),
+                        icon: Icon(CustomIcons.close))
+                  ],
+                ),
+                Container(
+                  height: 230,
+                  width: 230,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                ],
-              ),
+                  child: QRCodeDartScanView(
+                    scanInvertedQRCode: true,
+                    onCapture: (data) async {
+                      final uri = Uri.parse(data.text);
+                      final decodedData = uri.pathSegments.last;
+                      final userExists =
+                          await FirestoreHelper.checkUserExist(decodedData);
+                      if (userExists) {
+                        setState(() {
+                          scannedData = decodedData;
+                          isScanning = false;
+                        });
+                        if (decodedData == _userData!.uid) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              showCloseIcon: true,
+                              backgroundColor: kGrayLight,
+                              content: Text(kNiceTry),
+                            ),
+                          );
+                          return;
+                        }
+                        Navigator.pop(context);
+                        _showWalletDialog(decodedData);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              showCloseIcon: true,
+                              backgroundColor: kGrayLight,
+                              content: Text(kUserDoesntExist)),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           );
         });
   }
