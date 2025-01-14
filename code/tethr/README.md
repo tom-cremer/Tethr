@@ -4,9 +4,11 @@
 
 Voici une vue d'ensemble des principaux dossiers de ce projet et leur contenu :
 
-**`dto/`** : Dossier contenant les Data Transfer Object (DTO) utilisée comme modèle pour structurer la base de données.
-**`push_data_firestore/`** : Dossier contenant une simple application Flutter pour ajouter/supprimé les données à Firestore.
-**`tethr/`** : Dossier racine de l'application.
+- **`dto/`** : Dossier contenant les Data Transfer Object (DTO) utilisée comme modèle pour structurer la base de données.
+- **`push_data_firestore/`** : Dossier contenant une simple application Flutter pour ajouter/supprimé les données à Firestore.
+
+
+- **`tethr/`** : Dossier racine de l'application.
 - **`lib/`** : Dossier principal contenant le code source de l'application Flutter. Organisé comme suit :
     - **`Screen/`** : Toutes les pages de l'application, comme `home_screen.dart`, `user_profile_screen.dart`, etc.
     - **`Helpers/`** : Les utilitaires et fonctions réutilisables, *Principe DRY* ou *Don't Repeat Yourself*,
