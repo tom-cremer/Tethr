@@ -4,10 +4,14 @@
 
 Voici une vue d'ensemble des principaux dossiers de ce projet et leur contenu :
 
+**`dto/`** : Dossier contenant les Data Transfer Object (DTO) utilisée comme modèle pour structurer la base de données.
+**`push_data_firestore/`** : Dossier contenant une simple application Flutter pour ajouter/supprimé les données à Firestore.
+**`tethr/`** : Dossier racine de l'application.
 - **`lib/`** : Dossier principal contenant le code source de l'application Flutter. Organisé comme suit :
     - **`Screen/`** : Toutes les pages de l'application, comme `home_screen.dart`, `user_profile_screen.dart`, etc.
     - **`Helpers/`** : Les utilitaires et fonctions réutilisables, *Principe DRY* ou *Don't Repeat Yourself*,
-    - **`Styles/`** : Les styles pour la personnalisation de l'application, incluant les couleurs, marges et gradients, etc.
+    - **`Styles/`** : Les styles pour la personnalisation de l'application, incluant les couleurs, marges et gradients,
+      etc.
     - **`Widget/`** : Les widgets personnalisés réutilisables (ex. `Wallet`, `Button`, etc.).
     - **`Fonts/`** : Les polices personnalisées utilisées dans l'application.
 
@@ -90,6 +94,52 @@ Ajoutez ici les maquettes ou captures d’écran des fonctionnalités.
 
 ---
 
+## Welcome & Onboarding 
+![Onboarding](https://tethr.tomcremer.be/images/gifs/Onboarding.gif)
+
+## Enregistrement de l'utilisateur
+![Register](https://tethr.tomcremer.be/images/gifs/Register.gif)
+
+## Home & Profile
+![HomeProfile](https://tethr.tomcremer.be/images/gifs/HomeProfile.gif)
+
+## Ajout de liens
+![Addlink](https://tethr.tomcremer.be/images/gifs/Addlink.gif) 
+
+## Achat de style de carte
+![Buying](https://tethr.tomcremer.be/images/gifs/Buying.gif)  
+
+# Edit de la carte
+## Edit du style de la carte
+![EditCard](https://tethr.tomcremer.be/images/gifs/EditCard.gif)  
+## Edit des informations
+![EditScreen](https://tethr.tomcremer.be/images/gifs/EditScreen.gif)
+
+## Follow
+![Follow](https://tethr.tomcremer.be/images/gifs/Follow.gif)
+
+## Scan dans l'application
+![ScanInApp](https://tethr.tomcremer.be/images/gifs/ScanInApp.gif)
+
+# Le Meilleur pour la fin ! 
+
+Le deeplink ! Cela fut compliqué de le mettre en place mais le résultat est là !  
+Lorsque nous scannons un QR code, et que nous l'ourvrons dans un navigateur, nous sommes redirigé vers le profil de la personne dans l'application si elle est installé!
+
+## Voici un exemple ⬇️
+![Deeplink2](https://tethr.tomcremer.be/images/gifs/Deeplink2.gif) 
+
+Si cela vous intéresse, voici quelques liens utiles : 
+- [Google Assert Deeplink](https://developers.google.com/digital-asset-links/tools/generator?source=post_page-----5189281a7377--------------------------------)
+ Trés utile pour vérifier si votre deeplink est bien configuré.
+- [Flutter Deeplink](https://pub.dev/packages/app_links)
+  Package utilisé pour mettre en place l'écoute du deeplink en plus de [GoRouter](https://pub.dev/packages/go_router) pour la navigation.
+
+# Autres liens utiles
+- [Create Custom Icons](https://yawarosman.medium.com/how-to-add-custom-icons-to-your-flutter-application-ea3f2ea62b9a)
+
+---
+
 ## 📈 État d'Avancement
 
 | Fonctionnalité                | Statut     |
@@ -99,7 +149,6 @@ Ajoutez ici les maquettes ou captures d’écran des fonctionnalités.
 | Ajout des liens               | ✅ Terminée |
 | SearchBar                     | ✅ Terminée |
 
-
 ---
 
 ## ⚙️ Compilation de l'Application
@@ -107,7 +156,8 @@ Ajoutez ici les maquettes ou captures d’écran des fonctionnalités.
 ### **Prérequis**
 
 - Flutter SDK installé.
-- Fichier `google-services.json` configuré pour Firebase avec votre clé d'API (Dans le cas de `google-services.json` vous avez juste a remplacer la clé).
+- Fichier `google-services.json` configuré pour Firebase avec votre clé d'API (Dans le cas de `google-services.json`
+  vous avez juste a remplacer la clé).
 - Fichier `firebase_options.dart` configuré pour Firebase avec votre clé d'API.
 
 ### **Étapes**
