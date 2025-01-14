@@ -13,6 +13,7 @@ Voici une vue d'ensemble des principaux dossiers de ce projet et leur contenu :
 
 - **`assets/`** : Contient les fichiers statiques, tels que :
     - **`images/`** : Logos et visuels utilisés dans l'application.
+    - **`gifs/`** : Les gifs utilisées dans l'application.
 
 
 - **`android/`** : Les configurations natives pour Android, comme les manifestes, les fichiers de configuration
@@ -45,8 +46,7 @@ de manière intuitive et sécurisée.
 **Ce que Tethr apporte** :
 
 - Gestion des profils avec QR codes.
-- Sécurité renforcée grâce à des signatures HMAC sur les QR codes.
-
+- Suivi des profils liké et scanné.
 ---
 
 ## 🎯 Public Cible
@@ -71,8 +71,7 @@ Tethr s’adresse à des utilisateurs variés :
 
 - **Récit utilisateur** : *En tant qu’utilisateur, je veux partager mon profil via un QR code pour un accès rapide par
   d’autres personnes ayant l'application installé.*
-- Génération sécurisée des QR codes avec signature HMAC.
-
+- Partage de la carte profil via un QR code.
 ### **Scanner un QR code**
 
 - **Récit utilisateur** : *En tant qu’utilisateur, je veux scanner un QR code pour accéder rapidement au profil d’une
@@ -97,6 +96,9 @@ Ajoutez ici les maquettes ou captures d’écran des fonctionnalités.
 |-------------------------------|------------|
 | Création d’un profil          | ✅ Terminée |
 | Scanner et ajout de followers | ✅ Terminée |
+| Ajout des liens               | ✅ Terminée |
+| SearchBar                     | ✅ Terminée |
+
 
 ---
 
@@ -114,17 +116,14 @@ Ajoutez ici les maquettes ou captures d’écran des fonctionnalités.
    ```bash 
     git clone https://github.com/trans-dam-2024-2025/projet-d-examen-2425-infographie-tom-cremer.git
     ```
-
 2. Ouvrez le dossier du projet dans votre éditeur de code favori.
-
-3. Installez les dépendances du projet :
-
+3. Ajoutez les fichiers `google-services.json` dans le dossier `android/app/`.
+4. Ajoutez les fichiers `firebase_options.dart` dans le dossier `lib/`.
+5. Installez les dépendances du projet :
    ```bash
    flutter pub get
    ```
-
-4. Exécutez l'application sur un émulateur ou un appareil connecté :
-
+6. Exécutez l'application sur un émulateur ou un appareil connecté :
    ```bash
    flutter run
    ```
