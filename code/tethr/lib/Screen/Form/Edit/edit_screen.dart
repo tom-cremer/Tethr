@@ -36,7 +36,7 @@ class _EditScreenState extends State<EditScreen> {
 
       setState(() {
         this.user = user;
-        this._purchaseItems = purchaseItems;
+        _purchaseItems = purchaseItems;
         isLoading = false;
       });
 

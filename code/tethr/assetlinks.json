@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android-app",
+    "package_name": "be.tomcremer.tethr",
+    "sha256_cert_fingerprints":
+    ["98:20:66:C5:A6:51:49:83:FD:8C:30:38:13:16:53:8F:13:9C:5E:5B:15:26:20:6B:57:A7:21:88:6C:D1:7E:64"]
+  }
+}]
